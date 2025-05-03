@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Entities.Abstract;
+using Core.Entities;
 
 namespace Entities.Concrete.Preferences;
 

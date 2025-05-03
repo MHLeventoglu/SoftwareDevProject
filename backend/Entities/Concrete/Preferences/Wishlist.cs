@@ -1,4 +1,4 @@
-using Entities.Abstract;
+using Core.Entities;
 using Entities.Concrete.Products;
 
 namespace Entities.Concrete.Preferences;

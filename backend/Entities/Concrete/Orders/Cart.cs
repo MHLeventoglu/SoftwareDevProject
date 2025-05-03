@@ -1,4 +1,4 @@
-using Entities.Abstract;
+using Core.Entities;
 
 namespace Entities.Concrete.Orders;
 
@@ -10,3 +10,4 @@ public class Cart:IEntity
     public string? CouponCode { get; set; }
     public bool Status { get; set; }
 }
+
