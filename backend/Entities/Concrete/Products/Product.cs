@@ -1,6 +1,6 @@
 using Entities.Abstract;
 
-namespace Entities.Concrete;
+namespace Entities.Concrete.Products;
 
 public class Product:IEntity
 {

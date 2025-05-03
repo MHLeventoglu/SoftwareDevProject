@@ -1,7 +1,8 @@
 using Entities.Abstract;
 
-namespace Entities.Concrete;
+namespace Entities.Concrete.Users;
 
-public class Admin : User, IEntity
+public class Staff : User, IEntity
 {
+    public int TypeId { get; set; }
 }

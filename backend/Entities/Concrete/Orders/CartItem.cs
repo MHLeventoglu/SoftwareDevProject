@@ -1,6 +1,6 @@
 using Entities.Abstract;
 
-namespace Entities.Concrete;
+namespace Entities.Concrete.Orders;
 
 public class CartItem:IEntity
 {

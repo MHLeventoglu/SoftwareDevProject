@@ -1,6 +1,6 @@
 using Entities.Abstract;
 
-namespace Entities.Concrete;
+namespace Entities.Concrete.Orders;
 
 public class Order:IEntity
 {
@@ -9,6 +9,5 @@ public class Order:IEntity
     public DateTime OrderDate { get; set; }
     public double TotalAmount { get; set; }
     public string? Status { get; set; }
-    public string? ShippingAddressId { get; set; }
-    public int CartId { get; set; }
+    public string? AddressId { get; set; }
 }

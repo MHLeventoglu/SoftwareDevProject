@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Entities.Abstract;
 
-namespace Entities.Concrete;
+namespace Entities.Concrete.Preferences;
 
 public class Address:IEntity
 {

@@ -1,6 +1,7 @@
 using Entities.Abstract;
+using Entities.Concrete.Products;
 
-namespace Entities.Concrete;
+namespace Entities.Concrete.Preferences;
 
 public class Wishlist:IEntity 
 {
