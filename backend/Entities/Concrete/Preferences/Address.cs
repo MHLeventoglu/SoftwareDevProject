@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Entities.Abstract;
 
 namespace Entities.Concrete;
@@ -5,6 +6,7 @@ namespace Entities.Concrete;
 public class Address:IEntity
 {
     public int Id { get; set; }
+    [Required]
     public string? AddressName { get; set; }
     public int CustomerId { get; set; }
     public string? City { get; set; }

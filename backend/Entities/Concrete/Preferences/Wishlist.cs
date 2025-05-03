@@ -2,7 +2,7 @@ using Entities.Abstract;
 
 namespace Entities.Concrete;
 
-public class Wishlist:IEntity
+public class Wishlist:IEntity 
 {
     public int Id { get; set; }
     public int CustomerId { get; set; }

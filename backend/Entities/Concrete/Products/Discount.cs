@@ -9,6 +9,6 @@ public class Discount:IEntity
     public double Percentage { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
-    public double MinPurchase { get; set; }
+    public decimal MinCost { get; set; }
     public string? Description { get; set; }
 }

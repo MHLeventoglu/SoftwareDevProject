@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Entities.Abstract;
 
 namespace Entities.Concrete;
@@ -5,5 +6,6 @@ namespace Entities.Concrete;
 public class Category:IEntity
 {
     public int Id { get; set; }
-    public string? CategoryName { get; set; }
+    [Required]
+    public string CategoryName { get; set; }
 }
