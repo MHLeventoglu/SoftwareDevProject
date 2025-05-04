@@ -6,4 +6,20 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Abstract/Customers/" />
+      <Folder Include="Abstract/Orders/" />
+      <Folder Include="Abstract/Preferences/" />
+      <Folder Include="Abstract/Products/" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="../Core/Core.csproj" />
+      <ProjectReference Include="../Entities/Entities.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
+    </ItemGroup>
+
 </Project>
