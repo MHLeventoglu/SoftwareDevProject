@@ -19,9 +19,9 @@ The objective of this project is to develop an e-commerce website where a corpor
 #### **Technology Stack:**
 
 - **Backend:** ASP.NET Core  
-- **Frontend:** React _(alternatively, Vue.js or Next.js can be used)_  
-- **Database:** MongoDB  
-- **Containerization:** Docker  
+- **Frontend:** React _(alternatively, Vite.js or Next.js can be used)_  
+- **Database:** Ms Sql Server  
+- **Containerization:** Docker(optionally)  
 - **Mail Service:** SMTP server or a suitable email library (for verification and notifications)  
 - **Payment System:** Integration with a local payment service  
 - **Optional:** SMS service integration (for notifications)
