@@ -4,6 +4,6 @@ using Entities.Concrete.Products;
 
 namespace DataAccess.Concrete.EntityFramework.Products;
 
-public class EfCategoryDal : EfEntityRepositoryBase<Category, AppDbContext>, ICategoryDal
+public class EfCategoryDal : EfEntityRepositoryBase<Category, DataBaseContext>, ICategoryDal
 {
 }

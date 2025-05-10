@@ -1,4 +1,4 @@
-using Entities.Concrete.Users;
+using Core.Entities.Concrete;
 
 namespace Business.Abstract.Users;
 

@@ -4,6 +4,6 @@ using Entities.Concrete.Products;
 
 namespace DataAccess.Concrete.EntityFramework.Products;
 
-public class EfBrandDal : EfEntityRepositoryBase<Brand, AppDbContext>, IBrandDal
+public class EfBrandDal : EfEntityRepositoryBase<Brand, DataBaseContext>, IBrandDal
 {
 }

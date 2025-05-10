@@ -4,7 +4,7 @@ using Entities.Concrete.Products;
 
 namespace DataAccess.Concrete.EntityFramework.Products;
 
-public class EfProductDal : EfEntityRepositoryBase<Product, AppDbContext>, IProductDal
+public class EfProductDal : EfEntityRepositoryBase<Product, DataBaseContext>, IProductDal
 {
     // Eğer özel bir sorgu gerekiyorsa burada implement edebilirsin
 }
