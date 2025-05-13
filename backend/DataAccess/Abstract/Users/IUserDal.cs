@@ -1,5 +1,5 @@
 using Core.DataAccess;
-using Entities.Concrete.Users;
+using Core.Entities.Concrete;
 
 namespace DataAccess.Abstract.Users;
 
