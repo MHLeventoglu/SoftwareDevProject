@@ -5,8 +5,8 @@ namespace Entities.Concrete.Users;
 
 public class User:IEntity
 {
-    public string? Id { get; set; }
-    public string? Name { get; set; }
+    public int? Id { get; set; }
+    public string? FirstName { get; set; }
     public string? Surname { get; set; }
     [EmailAddress]
     public string? Email { get; set; }

@@ -6,4 +6,30 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Abstract/Customers/" />
+      <Folder Include="Abstract/Orders/" />
+      <Folder Include="Abstract/Preferences/" />
+      <Folder Include="Abstract/Products/" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="../Core/Core.csproj" />
+      <ProjectReference Include="../Entities/Entities.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.4">
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+    </ItemGroup>
+
 </Project>
