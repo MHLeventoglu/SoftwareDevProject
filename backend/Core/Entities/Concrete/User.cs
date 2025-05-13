@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Core.Entities;
 
-namespace Entities.Concrete.Users;
+namespace Core.Entities.Concrete;
 
 public class User:IEntity
 {
