@@ -18,6 +18,8 @@ public class DataBaseContext : DbContext
     }    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Base User Configuration with TPH (Table Per Hierarchy) inheritance
+
+        // User Related //
         modelBuilder.Entity<User>(entity =>
         {
             // Primary Key Configuration
@@ -38,13 +40,11 @@ public class DataBaseContext : DbContext
                   .HasValue<Staff>("Staff");
         });
 
-        // Customer specific configuration (without key configuration)
         modelBuilder.Entity<Customer>(entity =>
         {
             entity.Property(c => c.Balance).HasDefaultValue(0);
         });
 
-        // Staff specific configuration (without key configuration)
         modelBuilder.Entity<Staff>(entity =>
         {
             entity.HasOne<StaffType>()
@@ -53,14 +53,13 @@ public class DataBaseContext : DbContext
                   .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // StaffType configuration
         modelBuilder.Entity<StaffType>(entity =>
         {
             entity.HasKey(st => st.Id);
             entity.Property(st => st.Name).IsRequired();
         });
 
-        // Product Related Configurations
+        // Product Related //
         modelBuilder.Entity<Product>(entity =>
         {
             entity.HasKey(p => p.Id);
@@ -112,7 +111,7 @@ public class DataBaseContext : DbContext
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // Order Related Configurations
+        // Order Related //
         modelBuilder.Entity<Cart>(entity =>
         {
             entity.HasKey(c => c.Id);
@@ -158,7 +157,7 @@ public class DataBaseContext : DbContext
                   .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // Preference Related Configurations
+        // Preference Related //
         modelBuilder.Entity<Address>(entity =>
         {
             entity.HasKey(a => a.Id);
@@ -181,7 +180,7 @@ public class DataBaseContext : DbContext
                   .WithMany();
         });
 
-        // Authorization Related Configurations
+        // Authorization Related //
         modelBuilder.Entity<OperationClaim>(entity =>
         {
             entity.HasKey(oc => oc.Id);
