@@ -3,22 +3,32 @@ using Core.Utilities.Results;
 using Entities.Concrete.Orders;
 
 namespace Business.Concrete.Orders;
-
+// bussiness layer for CartItem management
 public class CartItemManager : ICartItemService
 {
     public IResult Add(CartItem entity)
     {
-        throw new NotImplementedException();
+        _cartItemDal.Add(entity);
+        return new SuccessResult("Cart Item added Sucessfully");
     }
 
     public IResult Delete(CartItem entity)
     {
-        throw new NotImplementedException();
+        if (entity == null)
+        {
+            return new ErrorResult("Cart Item not found");
+        }
+        _cartItemDal.Delete(entity);
     }
 
     public IResult Update(CartItem entity)
     {
-        throw new NotImplementedException();
+        if (entity == null)    
+        {
+            return new ErrorResult("Cart Item not found");
+        }
+        _cartItemDal.Update(entity);
+        return new SuccessResult("Cart Item updated successfully");
     }
 
     public IDataResult<List<CartItem>> GetAll()
