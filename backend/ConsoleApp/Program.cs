@@ -1,25 +1,36 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using Autofac;
+using Business.Abstract.Products;
+using Business.DependencyResolvers.Autofac;
 using DataAccess.Concrete.EntityFramework;
-using DataAccess.Concrete.EntityFramework.Products;
-using DataAccess.Abstract.Products;
 using Microsoft.EntityFrameworkCore;
-using Entities.Concrete.Products;
 
 // Ensure database is created
 using (var context = new DataBaseContext())
 {
-    // context.Database.Migrate();
-    context.Database.EnsureCreated();}
+    context.Database.EnsureCreated();
+}
 
-IProductDal productDal = new EfProductDal();
-ICategoryDal categoryDal = new EfCategoryDal();
-IBrandDal brandDal = new EfBrandDal();
+// Setup Autofac
+var builder = new ContainerBuilder();
+builder.RegisterModule(new AutofacBusinessModule());
+var container = builder.Build();
+
+// Resolve services
+var productService = container.Resolve<IProductService>();
+var categoryService = container.Resolve<ICategoryService>();
+var brandService = container.Resolve<IBrandService>();
+
 Console.WriteLine("Products in the database:");
-// brandDal.Add(new Brand { BrandName = "Test Brand3" });
-// categoryDal.Add(new Category { CategoryName = "Test Category3" });
-var products = productDal.GetAll();
-
-foreach (var product in products)
+var result = productService.GetAll();
+if (result.Success)
 {
-    Console.WriteLine($"Product: {product.ProductName}");
+    foreach (var product in result.Data)
+    {
+        Console.WriteLine($"Product: {product.ProductName}");
+    }
+}
+else
+{
+    Console.WriteLine($"Error: {result.Message}");
 }

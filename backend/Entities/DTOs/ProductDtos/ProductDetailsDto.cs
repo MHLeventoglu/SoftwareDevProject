@@ -1,8 +1,9 @@
 using Core.Entities;
+using Entities.Concrete.Products;
 
 namespace Entities.DTOs.ProductDtos;
 
-public class ProductDetailDto : IDto
+public class ProductDetailsDto : IDto
 {
     public int Id { get; set; }
     public string ProductName { get; set; }
@@ -13,4 +14,5 @@ public class ProductDetailDto : IDto
     public short StockCount { get; set; }
     public double AverageRating { get; set; }
     public int ReviewCount { get; set; }
+    //public List<Review> Reviews { get; set; }
 }

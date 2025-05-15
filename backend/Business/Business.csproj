@@ -12,4 +12,9 @@
     <ProjectReference Include="..\Entities\Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="2.2.4.900" />
+    <PackageReference Include="Castle.Core" Version="5.2.1" />
+  </ItemGroup>
+
 </Project>
