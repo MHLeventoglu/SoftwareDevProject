@@ -39,7 +39,7 @@ namespace WebApi.Controllers
 
         // POST: api/product
         [HttpPost]
-        public IActionResult Add([FromBody] ProductDto product)//FromBody → JSON içeriğini alıp ProductDto nesnesine dönüştürür.
+        public IActionResult Add([FromBody] Product product)//FromBody → JSON içeriğini alıp ProductDto nesnesine dönüştürür.
         {
             _productService.Add(product);
             return Ok(); // 200 OK
@@ -47,24 +47,35 @@ namespace WebApi.Controllers
 
         // PUT: api/product/5
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] ProductDto product)
+        public IActionResult Update(int id, [FromBody] Product product)
         {
-            var updated = _productService.Update(id, product);
-            if (!updated)
+            // kontrol: Route id ile gönderilen nesnedeki id uyuşuyor mu?
+            if (id != product.Id)
+                return BadRequest("Gönderilen ID ile ürün ID'si uyuşmuyor.");
+
+            var result = _productService.Update(product);
+
+            if (!result.Success)
                 return NotFound();
 
-            return Ok();
+            return Ok(result);
         }
 
         // DELETE: api/product/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var deleted = _productService.Delete(id);
-            if (!deleted)
+            var productToDelete = _productService.GetById(id);
+
+            if (!productToDelete.Success || productToDelete.Data == null)
                 return NotFound();
 
-            return Ok();
+            var result = _productService.Delete(productToDelete.Data);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            return Ok(result);
         }
     }
 
