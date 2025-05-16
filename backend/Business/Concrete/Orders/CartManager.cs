@@ -6,28 +6,52 @@ namespace Business.Concrete.Orders;
 
 public class CartManager : ICartService
 {
+    private readonly ICartDal _cartDal;
+
+    public CartManager(ICartDal cartDal)
+    {
+        _cartDal = cartDal;
+    }
+
     public IResult Add(Cart entity)
     {
-        throw new NotImplementedException();
+        _carts.Add(entity);
+        return new SuccessResult("Cart added successfully.");
     }
 
     public IResult Delete(Cart entity)
     {
-        throw new NotImplementedException();
+        if (entity == null)
+        {
+            return new ErrorResult("Cart not found.");
+        }
+
+        _cartDal.Delete(entity);
+        return new SuccessResult("Cart deleted successfully.");
     }
 
     public IResult Update(Cart entity)
     {
-        throw new NotImplementedException();
+        var cart = _carts.FirstOrDefault(c => c.Id == entity.Id);
+        if (cart == null)
+            return new ErrorResult("Cart not found.");
+        // Update properties as needed
+        cart.UserId = entity.UserId;
+        cart.Items = entity.Items;
+        // ...add other property updates if needed...
+        return new SuccessResult("Cart updated successfully.");
     }
 
     public IDataResult<List<Cart>> GetAll()
     {
-        throw new NotImplementedException();
+        return new SuccessDataResult<List<Cart>>(_carts, "Carts listed successfully.");
     }
 
     public IDataResult<Cart> GetById(int id)
     {
-        throw new NotImplementedException();
+        var cart = _carts.FirstOrDefault(c => c.Id == id);
+        if (cart == null)
+            return new ErrorDataResult<Cart>("Cart not found.");
+        return new SuccessDataResult<Cart>(cart, "Cart found.");
     }
 }
