@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Business.Abstract.Products;
 using Entities.Concrete.Products;
 
-
 namespace WebApi.Controllers
 {
 
@@ -21,7 +20,7 @@ namespace WebApi.Controllers
         [HttpGet]// ASP.NET Core bu etiketi görüp ona göre davranır.Bu metot, HTTP GET isteklerine yanıt verecek
         public IActionResult GetAll()//tüm ürünleri businnes katmanından alıyor
         {
-            var products = _productService.GetAll();//List<ProductDto> products = _productManager.GetAllProducts(); var = değişkenin tipini otomatik belirle , ürünleri veri tabanından al ProductDto listesinden oluşan bir nesne olarak dön.
+            var products = _productService.GetAll();
             return Ok(products); // 200 OK + JSON
 
         }
