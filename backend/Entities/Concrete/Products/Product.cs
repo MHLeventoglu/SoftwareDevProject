@@ -10,6 +10,7 @@ public class Product:IEntity
     public int BrandId { get; set; }
     public int CategoryId { get; set; }
     public decimal Price { get; set; }
+    public double AverageRating { get; set; }
     public short StockCount { get; set; }
     public DateTime DateAdded { get; set; }
 }
