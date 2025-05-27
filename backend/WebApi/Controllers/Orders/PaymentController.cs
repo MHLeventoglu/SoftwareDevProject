@@ -25,11 +25,6 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpGet("status/{id}")]
-        public IActionResult GetPaymentStatus(string id)
-        {
-            var status = _paymentService.GetPaymentStatus(id);
-            return Ok(status);
-        }
+       
     }
 }

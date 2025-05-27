@@ -42,21 +42,26 @@ namespace WebApi.Controllers.Orders
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] CartItem cartItem)
         {
-            var updated = _cartItemService.Update(id, cartItem);
-            if (!updated)
-                return NotFound();
+            var result = _cartItemService.Update(cartItem);
+            if (!result.Success)
+            return NotFound(result.Message);
 
-            return Ok();
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var deleted = _cartItemService.Delete(id);
-            if (!deleted)
-                return NotFound();
+            var cartItemResult = _cartItemService.GetById(id);
+            if (!cartItemResult.Success)
+            return NotFound(cartItemResult.Message);
 
-            return Ok();
+      
+            var result = _cartItemService.Delete(cartItemResult.Data);
+            if (!result.Success)
+            return BadRequest(result.Message);
+
+            return Ok(result);
         }
     }
 }

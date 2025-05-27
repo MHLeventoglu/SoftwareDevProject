@@ -39,7 +39,12 @@ namespace WebApi.Controllers.Preferences
         [HttpDelete("{productId}")]
         public IActionResult Delete(int productId)
         {
-            var result = _wishlistService.Delete(productId);
+            var wishlistResult = _wishlistService.GetById(productId);
+            if (!wishlistResult.Success)
+                return NotFound(wishlistResult.Message);
+
+        
+            var result = _wishlistService.Delete(wishlistResult.Data);
             if (!result.Success)
                 return BadRequest(result.Message);
 
