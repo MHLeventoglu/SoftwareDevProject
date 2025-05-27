@@ -39,9 +39,14 @@ namespace WebApi.Controllers.Preferences
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var result = _addressService.Delete(id);
+           var addressResult = _addressService.GetById(id);
+            if (!addressResult.Success)
+            return NotFound(addressResult.Message);
+
+   
+            var result = _addressService.Delete(addressResult.Data);
             if (!result.Success)
-                return BadRequest(result.Message);
+              return BadRequest(result.Message);
 
             return Ok(result);
         }
