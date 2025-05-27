@@ -49,9 +49,14 @@ namespace WebApi.Controllers.Users
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var result = _customerService.Delete(id);
+            var customerResult = _customerService.GetById(id);
+            if (!customerResult.Success)
+             return NotFound(customerResult.Message);
+
+   
+             var result = _customerService.Delete(customerResult.Data);
             if (!result.Success)
-                return BadRequest(result.Message);
+            return BadRequest(result.Message);
 
             return Ok(result);
         }
