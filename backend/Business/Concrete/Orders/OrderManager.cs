@@ -3,7 +3,6 @@ using Core.Utilities.Results;
 using DataAccess.Abstract.Orders;
 using Entities.Concrete.Orders;
 using DataAccess.Abstract.Orders;
-using DataAccess.Abstract.Carts;
 
 namespace  Business.Concrete.Orders;
 

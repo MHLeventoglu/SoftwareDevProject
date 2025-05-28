@@ -2,11 +2,6 @@ using Business.Abstract.Orders;
 using Core.Utilities.Results;
 using Entities.Concrete.Orders;
 using DataAccess.Abstract.Orders;
-<<<<<<< HEAD
-using DataAccess.Abstract.Carts;
-=======
-
->>>>>>> 40c417d9e2a7e331912d36e32b93cb3f3adf8e23
 
 namespace Business.Concrete.Orders;
 

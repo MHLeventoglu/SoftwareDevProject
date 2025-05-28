@@ -1,18 +1,15 @@
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
+using System.Collections.Generic;
 
 namespace Business.Abstract.Users
 {
-<<<<<<< HEAD
-    public interface IUserService : IBaseService<User>
+    public interface IUserService
     {
-        IResult SendVerificationEmail(string email);
-        IResult VerifyEmail(string email, string token);
+        IResult Add(User entity);
+        IResult Update(User entity);
+        IResult Delete(User entity);
+        IDataResult<User> GetByEmail(string email);
+        IDataResult<List<OperationClaim>> GetClaims(User user);
     }
 }
-=======
-    // User'a özel metodlar buraya
-    IDataResult<User> GetByEmail(string email);
-    IDataResult<List<OperationClaim>> GetClaims(User user);
-}
->>>>>>> 40c417d9e2a7e331912d36e32b93cb3f3adf8e23
