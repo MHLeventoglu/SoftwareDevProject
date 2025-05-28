@@ -2,7 +2,11 @@ using Business.Abstract.Orders;
 using Core.Utilities.Results;
 using Entities.Concrete.Orders;
 using DataAccess.Abstract.Orders;
+<<<<<<< HEAD
 using DataAccess.Abstract.Carts;
+=======
+
+>>>>>>> 40c417d9e2a7e331912d36e32b93cb3f3adf8e23
 
 namespace Business.Concrete.Orders;
 
@@ -17,7 +21,7 @@ public class CartManager : ICartService
 
     public IResult Add(Cart entity)
     {
-        _carts.Add(entity);
+        _cartDal.Add(entity);
         return new SuccessResult("Cart added successfully.");
     }
 
@@ -34,11 +38,11 @@ public class CartManager : ICartService
 
     public IResult Update(Cart entity)
     {
-        var cart = _carts.FirstOrDefault(c => c.Id == entity.Id);
+        var cart = _cartDal.Get(c => c.Id == entity.Id);
         if (cart == null)
             return new ErrorResult("Cart not found.");
         // Update properties as needed
-        cart.UserId = entity.UserId;
+        cart.Id = entity.Id;
         cart.Items = entity.Items;
         // ...add other property updates if needed...
         return new SuccessResult("Cart updated successfully.");
@@ -46,12 +50,12 @@ public class CartManager : ICartService
 
     public IDataResult<List<Cart>> GetAll()
     {
-        return new SuccessDataResult<List<Cart>>(_carts, "Carts listed successfully.");
+        return new SuccessDataResult<List<Cart>>(_cartDal.GetAll(), "Carts listed successfully.");
     }
 
     public IDataResult<Cart> GetById(int id)
     {
-        var cart = _carts.FirstOrDefault(c => c.Id == id);
+        var cart = _cartDal.Get(c => c.Id == id);
         if (cart == null)
             return new ErrorDataResult<Cart>("Cart not found.");
         return new SuccessDataResult<Cart>(cart, "Cart found.");

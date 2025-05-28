@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Mail;
 using Business.Abstract.Users;
 using Core.Utilities.Results;
+using Core.Entities.Concrete;
 using DataAccess.Abstract.Users;
 using Core.Entities.Concrete;
 
@@ -55,59 +56,17 @@ public class UserManager : IUserService
         return new SuccessDataResult<User>(user);
     }
 
-    public void SendVerificationEmail(string email)
+    public IDataResult<User> GetByEmail(string email)
     {
-        var user = _userDal.Get(u => u.Email == email);
-        if (user == null)
-            throw new Exception("User not found.");
-
-        var token = Guid.NewGuid().ToString();
-        user.VerificationToken = token;
-        user.IsEmailVerified = false;
-        _userDal.Update(user);
-
-        var verificationLink = $"https://yourdomain.com/verify?userId={user.Id}&token={token}";
-        var body = $"Hello,\n\nPlease verify your email by clicking the following link:\n{verificationLink}";
-
-        // SMTP ayarları (gerçek değerlerle değiştirin)
-        var smtpClient = new SmtpClient("smtp.gmail.com")
-        {
-            Port = 587,
-            Credentials = new NetworkCredential("your_email@gmail.com", "your_email_password_or_app_password"),
-            EnableSsl = true,
-        };
-
-        var mailMessage = new MailMessage
-        {
-            From = new MailAddress("your_email@gmail.com"),
-            Subject = "Email Verification",
-            Body = body,
-            IsBodyHtml = false,
-        };
-
-        mailMessage.To.Add(email);
-
-        smtpClient.Send(mailMessage);
-
-        Console.WriteLine("Verification email sent.");
+        return new SuccessDataResult<User>(_userDal.Get(u => u.Email == email), "User found by email.");
     }
 
-    public void VerifyEmail(string userId, string token)
+    public IDataResult<List<OperationClaim>> GetClaims(User user)
     {
-        int id = int.Parse(userId);
-        var user = _userDal.Get(u => u.Id == id);
+        var claims = _userDal.GetClaims(user);
+        if (claims == null || claims.Count == 0)
+            return new ErrorDataResult<List<OperationClaim>>("No claims found for this user.");
 
-        if (user == null)
-            throw new Exception("User not found.");
-
-        if (user.VerificationToken != token)
-            throw new Exception("Invalid verification token.");
-
-        user.IsEmailVerified = true;
-        user.VerificationToken = null;
-
-        _userDal.Update(user);
-
-        Console.WriteLine("Email verified successfully.");
+        return new SuccessDataResult<List<OperationClaim>>(claims, "Claims retrieved successfully.");
     }
 }
