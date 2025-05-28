@@ -1,15 +1,24 @@
 using System;
+using Core.Entities.Concrete;
 
 namespace Business.Constants;
 
-public class Messages
+public static class Messages
 {
-    const string PRODUCT_ADDED = "Product added successfully.";
-    const string PRODUCT_UPDATED = "Product updated successfully.";
-    const string PRODUCT_DELETED = "Product deleted successfully.";
-    const string PRODUCT_NOT_FOUND = "Product not found.";
-    const string PRODUCT_LISTED = "Products listed successfully.";
-    const string PRODUCT_NAME_INVALID = "Product name is invalid.";
-    const string PRODUCT_PRICE_INVALID = "Product price is invalid.";
-    //... etc. for other messages
+    public const string ProductAdded = "Product added successfully.";
+    public const string ProductUpdated = "Product updated successfully.";
+    public const string ProductDeleted = "Product deleted successfully.";
+    public const string ProductNotFound = "Product not found.";
+    public const string ProductListed = "Products listed successfully.";
+    public const string ProductNameInvalid = "Product name is invalid.";
+    public const string ProductPriceInvalid = "Product price is invalid.";
+
+    public const string UserNotFound = "User not found.";
+    public const string PasswordError = "Incorrect password.";
+    public const string UserRegistered = "User registered successfully.";
+    public const string SuccessfulLogin = "Login successful.";
+    public const string UserExists = "User already exists.";
+    public const string AccessTokenCreated = "Access token created successfully.";
+
+    // Add more messages here as needed...
 }

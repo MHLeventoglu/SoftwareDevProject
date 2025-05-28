@@ -1,5 +1,6 @@
 using Business.Abstract.Users;
 using Core.Utilities.Results;
+using Core.Entities.Concrete;
 using DataAccess.Abstract.Users;
 using Entities.Concrete.Users;
 
@@ -51,5 +52,19 @@ public class UserManager : IUserService
             return new ErrorDataResult<User>("User not found.");
 
         return new SuccessDataResult<User>(user);
+    }
+
+    public IDataResult<User> GetByEmail(string email)
+    {
+        return new SuccessDataResult<User>(_userDal.Get(u => u.Email == email), "User found by email.");
+    }
+
+    public IDataResult<List<OperationClaim>> GetClaims(User user)
+    {
+        var claims = _userDal.GetClaims(user);
+        if (claims == null || claims.Count == 0)
+            return new ErrorDataResult<List<OperationClaim>>("No claims found for this user.");
+
+        return new SuccessDataResult<List<OperationClaim>>(claims, "Claims retrieved successfully.");
     }
 }
