@@ -1,8 +1,11 @@
 using Core.Entities.Concrete;
+using Core.Utilities.Results;
 
-namespace Business.Abstract.Users;
-
-public interface IUserService : IBaseService<User>
+namespace Business.Abstract.Users
 {
-    // User'a özel metodlar buraya
+    public interface IUserService : IBaseService<User>
+    {
+        IResult SendVerificationEmail(string email);
+        IResult VerifyEmail(string email, string token);
+    }
 }

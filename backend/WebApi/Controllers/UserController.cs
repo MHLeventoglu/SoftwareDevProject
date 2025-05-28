@@ -46,5 +46,23 @@ namespace WebApi.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost("send-verification-email")]
+        public IActionResult SendVerificationEmail([FromBody] string email)
+        {
+            var result = _userService.SendVerificationEmail(email);
+            if (!result.Success)
+                return BadRequest(result.Message);
+            return Ok(result);
+        }
+
+        [HttpPost("verify-email")]
+        public IActionResult VerifyEmail([FromQuery] string email, [FromQuery] string token)
+        {
+            var result = _userService.VerifyEmail(email, token);
+            if (!result.Success)
+                return BadRequest(result.Message);
+            return Ok(result);
+        }
     }
 }
