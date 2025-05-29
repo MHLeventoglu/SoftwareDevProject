@@ -6,5 +6,5 @@ namespace Business.Abstract.Orders;
 public interface IOrderService : IBaseService<Order>
 {
     // Eğer bu classa özel bir metod tanımlayacaksan burada tanımla
-    IDataResult<Order> GetOrderByUserId(int userId);
+    IDataResult<List<Order>> GetOrdersByUserId(int userId);
 }

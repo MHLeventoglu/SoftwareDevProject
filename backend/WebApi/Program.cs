@@ -1,13 +1,16 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Business.DependencyResolvers.Autofac;
+using DataAccess.Concrete.EntityFramework;
 
+using (var context = new DataBaseContext())
+{
+    context.Database.EnsureCreated();
+}
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-
-builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory()).ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     containerBuilder.RegisterModule(new AutofacBusinessModule());
 });
