@@ -1,7 +1,12 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Business.DependencyResolvers.Autofac;
+using DataAccess.Concrete.EntityFramework;
 
+using (var context = new DataBaseContext())
+{
+    context.Database.EnsureCreated();
+}
 var builder = WebApplication.CreateBuilder(args);
 
 
