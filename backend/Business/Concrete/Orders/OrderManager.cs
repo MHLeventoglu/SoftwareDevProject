@@ -50,6 +50,16 @@ public class OrderManager:IOrderService
 
         return new SuccessDataResult<Order>(order, "Order fetched successfully.");
     }
+
+    public IDataResult<Order> GetOrderByUserId(int userId)
+    {
+
+        var order = _orderDal.Get(o => o.Id == userId);
+        if (order == null)
+            return new ErrorDataResult<Order>("Order not found for the specified user.");
+
+        return new SuccessDataResult<Order>(order, "Order fetched successfully for the user.");
+    }
 }
 
 

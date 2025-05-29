@@ -56,5 +56,15 @@ public class AddressManager : IAddressService
         }
         return new SuccessDataResult<Address>(address);
     }
+
+    public IDataResult<Address> GetByUserId(int userId)
+    {
+        var address = _addressDal.Get(a => a.Id == userId);
+        if (address == null)
+        {
+            return new ErrorDataResult<Address>("Address not found for the specified user.");
+        }
+        return new SuccessDataResult<Address>(address, "Address fetched successfully for the user.");
+    }
 }
 
