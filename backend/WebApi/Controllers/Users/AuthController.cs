@@ -1,4 +1,6 @@
 
+using Business.Abstract;
+using Entities.DTOs.UserDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers.Users
@@ -16,7 +18,7 @@ namespace WebApi.Controllers.Users
     }
 
     [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginDto loginDto)
+    public IActionResult Login([FromBody] UserForLoginDto loginDto)
     {
         var result = _authService.Login(loginDto);
         if (!result.Success)
@@ -26,9 +28,9 @@ namespace WebApi.Controllers.Users
     }
 
     [HttpPost("register")]
-    public IActionResult Register([FromBody] RegisterDto registerDto)
+    public IActionResult Register([FromBody] UserForRegisterDto registerDto)
     {
-        var result = _authService.Register(registerDto);
+        var result = _authService.Register(registerDto, registerDto.Password);
         if (!result.Success)
             return BadRequest(result.Message);
 

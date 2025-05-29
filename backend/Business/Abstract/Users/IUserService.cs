@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Business.Abstract.Users
 {
-    public interface IUserService
+    public interface IUserService: IBaseService<User>
     {
         IResult Add(User entity);
         IResult Update(User entity);

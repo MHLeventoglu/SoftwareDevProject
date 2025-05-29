@@ -51,14 +51,14 @@ public class OrderManager:IOrderService
         return new SuccessDataResult<Order>(order, "Order fetched successfully.");
     }
 
-    public IDataResult<Order> GetOrderByUserId(int userId)
+    public IDataResult<List<Order>> GetOrdersByUserId(int userId)
     {
 
-        var order = _orderDal.Get(o => o.Id == userId);
-        if (order == null)
-            return new ErrorDataResult<Order>("Order not found for the specified user.");
+        List<Order> orders = _orderDal.GetAll(o => o.Id == userId);
+        if (orders == null)
+            return new ErrorDataResult<List<Order>>("Order not found for the specified user.");
 
-        return new SuccessDataResult<Order>(order, "Order fetched successfully for the user.");
+        return new SuccessDataResult<List<Order>>(orders, "Order fetched successfully for the user.");
     }
 }
 
