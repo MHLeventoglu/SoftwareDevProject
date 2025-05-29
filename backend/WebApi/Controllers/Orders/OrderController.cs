@@ -34,7 +34,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult CreateOrder([FromBody] Order order)
         {
-            var result = _orderService.CreateOrder(order);
+            var result = _orderService.Add(order);
             if (!result.Success)
                 return BadRequest(result.Message);
 
