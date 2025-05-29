@@ -55,4 +55,12 @@ public class CartManager : ICartService
             return new ErrorDataResult<Cart>("Cart not found.");
         return new SuccessDataResult<Cart>(cart, "Cart found.");
     }
+
+    public IDataResult<Cart> GetCartByUserId(int id)
+    {
+        var cart = _cartDal.Get(c => c.Id == id);
+        if (cart == null)
+            return new ErrorDataResult<Cart>("Cart not found for the specified user.");
+        return new SuccessDataResult<Cart>(cart, "Cart found for the specified user.");
+    }
 }

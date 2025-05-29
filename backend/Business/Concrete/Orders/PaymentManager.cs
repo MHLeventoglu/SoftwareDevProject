@@ -2,6 +2,7 @@ using Business.Abstract.Orders;
 using Core.Utilities.Results;
 using DataAccess.Abstract.Orders;
 using Entities.Concrete.Orders;
+using Entities.DTOs.OrderDtos;
 
 namespace Business.Concrete.Orders;
 
@@ -51,5 +52,20 @@ public class PaymentManager : IPaymentService
             return new ErrorDataResult<Payment>("Payment not found.");
 
         return new SuccessDataResult<Payment>(payment, "Payment fetched successfully.");
+    }
+
+    public IResult StartPayment(PaymentRequest request)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IDataResult<string> GetPaymentStatus(string id)
+    {
+        var payment = _paymentDal.Get(p => p.Id.ToString() == id);
+        if (payment == null)
+            return new ErrorDataResult<string>("Payment not found.");
+
+        // Assuming the Payment entity has a Status property
+        return new SuccessDataResult<string>(payment.Status, "Payment status fetched successfully.");
     }
 }
