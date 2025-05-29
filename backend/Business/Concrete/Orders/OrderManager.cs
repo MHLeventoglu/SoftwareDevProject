@@ -2,10 +2,12 @@ using Business.Abstract.Orders;
 using Core.Utilities.Results;
 using DataAccess.Abstract.Orders;
 using Entities.Concrete.Orders;
+using Entities.DTOs.OrderDtos;
+using Entities.DTOs.Orders;
 
 namespace  Business.Concrete.Orders;
 
-public class OrderManager:IOrderService
+public class OrderManager : IOrderService
 {
     private readonly IOrderDal _orderDal;
     public OrderManager(IOrderDal orderDal)
@@ -50,6 +52,31 @@ public class OrderManager:IOrderService
 
         return new SuccessDataResult<Order>(order, "Order fetched successfully.");
     }
+    public IDataResult<List<Order>> GetOrdersByUserId(int userId)
+    {
+        var orders = _orderDal.GetAll(o => o.UserId == userId);
+        return new SuccessDataResult<List<Order>>(orders, "Kullanıcının siparişleri listelendi.");
+    }
+    public IResult CreateOrder(OrderCreateDto dto)
+    {
+        if (dto == null)
+            return new ErrorResult("Geçersiz sipariş verisi.");
+
+        var order = new Order
+        {
+            UserId = dto.UserId,
+            AddressId = dto.AddressId,
+            CouponCode = dto.CouponCode,
+            PaymentMethod = dto.PaymentMethod,
+            CreatedAt = DateTime.Now,
+            Status = "Hazırlanıyor"
+            // Diğer alanları ihtiyaca göre ekle
+        };
+
+        _orderDal.Add(order);
+        return new SuccessResult("Sipariş oluşturuldu.");
+    }
+
 }
 
 

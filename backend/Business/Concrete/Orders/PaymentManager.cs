@@ -2,6 +2,7 @@ using Business.Abstract.Orders;
 using Core.Utilities.Results;
 using DataAccess.Abstract.Orders;
 using Entities.Concrete.Orders;
+using Entities.DTOs.OrderDtos; // Bunu eklemeyi unutma
 
 namespace Business.Concrete.Orders;
 
@@ -51,5 +52,30 @@ public class PaymentManager : IPaymentService
             return new ErrorDataResult<Payment>("Payment not found.");
 
         return new SuccessDataResult<Payment>(payment, "Payment fetched successfully.");
+    }
+
+    public IResult StartPayment(PaymentRequest request)
+    {
+        // Sadece mevcut alanlara göre örnek kayıt oluşturuluyor
+        var payment = new Payment
+        {
+            OrderId = request.OrderId,
+            Status = "Processing"
+        };
+
+        _paymentDal.Add(payment);
+        return new SuccessResult("Ödeme başlatıldı.");
+    }
+
+    public IDataResult<string> GetPaymentStatus(string id)
+    {
+        if (!int.TryParse(id, out var paymentId))
+            return new ErrorDataResult<string>("Geçersiz ödeme ID.");
+
+        var payment = _paymentDal.Get(p => p.Id == paymentId);
+        if (payment == null)
+            return new ErrorDataResult<string>("Ödeme bulunamadı.");
+
+        return new SuccessDataResult<string>(payment.Status ?? "Durum bilinmiyor");
     }
 }
