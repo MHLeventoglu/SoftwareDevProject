@@ -2,7 +2,6 @@ using Business.Abstract.Orders;
 using Core.Utilities.Results;
 using DataAccess.Abstract.Orders;
 using Entities.Concrete.Orders;
-using DataAccess.Abstract.Orders;
 
 namespace  Business.Concrete.Orders;
 
