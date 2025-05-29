@@ -56,5 +56,15 @@ namespace Business.Concrete.Preferences
             }
             return new SuccessDataResult<Wishlist>(wishlist);
         }
+
+        public IDataResult<Wishlist> GetByUserId(int userId)
+        {
+            var wishlist = _wishlistDal.Get(w => w.Id == userId);
+            if (wishlist == null)
+            {
+                return new ErrorDataResult<Wishlist>("Wishlist not found for the specified user.");
+            }
+            return new SuccessDataResult<Wishlist>(wishlist, "Wishlist fetched successfully for the user.");
+        }
     }
 }

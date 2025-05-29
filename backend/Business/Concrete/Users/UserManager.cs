@@ -4,6 +4,7 @@ using Business.Abstract.Users;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccess.Abstract.Users;
+using Core.Entities.Concrete;
 using Entities.DTOs.UserDtos;
 
 namespace Business.Concrete.Users;
@@ -72,48 +73,16 @@ public class UserManager : IUserService
 
     public IResult Register(UserForRegisterDto dto)
     {
-        var user = new User
-        {
-            FirstName = dto.FirstName,
-            Surname = dto.Surname,
-            Email = dto.Email,
-            Status = true
-            // Şifreleme işlemi burada yapılmalı (örn. hashing)
-        };
-
-        _userDal.Add(user);
-        return new SuccessResult("Kullanıcı başarıyla kaydedildi.");
+        throw new NotImplementedException();
     }
 
     public IResult SendVerificationEmail(string email)
     {
-        var message = new MailMessage();
-        message.To.Add(email);
-        message.Subject = "Doğrulama Kodu";
-        message.Body = "Doğrulama kodunuz: 123456";
-
-        using var smtp = new SmtpClient("smtp.example.com", 587)
-        {
-            Credentials = new NetworkCredential("no-reply@example.com", "password"),
-            EnableSsl = true
-        };
-
-        try
-        {
-            smtp.Send(message);
-            return new SuccessResult("Doğrulama e-postası gönderildi.");
-        }
-        catch (Exception ex)
-        {
-            return new ErrorResult($"E-posta gönderilemedi: {ex.Message}");
-        }
+        throw new NotImplementedException();
     }
 
-    public IResult VerifyEmail(string email, string code)
+    public IResult VerifyEmail(string email, string verificationCode)
     {
-        if (code == "123456")
-            return new SuccessResult("E-posta doğrulaması başarılı.");
-
-        return new ErrorResult("Doğrulama kodu geçersiz.");
+        throw new NotImplementedException();
     }
 }

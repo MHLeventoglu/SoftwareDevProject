@@ -22,7 +22,7 @@ namespace WebApi.Controllers
             return Ok(orders);
         }
 
-        [HttpGet("detail/{id}")]
+        [HttpGet("detail/{id}")]// burası düzeltilecek
         public IActionResult GetOrderDetail(int id)
         {
             var order = _orderService.GetById(id);
@@ -34,7 +34,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult CreateOrder([FromBody] Order order)
         {
-            var result = _orderService.CreateOrder(order);
+            var result = _orderService.Add(order);
             if (!result.Success)
                 return BadRequest(result.Message);
 
