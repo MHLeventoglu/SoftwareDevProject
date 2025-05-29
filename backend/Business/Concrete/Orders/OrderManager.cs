@@ -2,18 +2,19 @@ using Business.Abstract.Orders;
 using Core.Utilities.Results;
 using DataAccess.Abstract.Orders;
 using Entities.Concrete.Orders;
-using Entities.DTOs.OrderDtos;
 using Entities.DTOs.Orders;
 
-namespace  Business.Concrete.Orders;
+namespace Business.Concrete.Orders;
 
 public class OrderManager : IOrderService
 {
     private readonly IOrderDal _orderDal;
+
     public OrderManager(IOrderDal orderDal)
     {
         _orderDal = orderDal;
     }
+
     public IResult Add(Order entity)
     {
         _orderDal.Add(entity);
@@ -52,31 +53,28 @@ public class OrderManager : IOrderService
 
         return new SuccessDataResult<Order>(order, "Order fetched successfully.");
     }
+
     public IDataResult<List<Order>> GetOrdersByUserId(int userId)
     {
-        var orders = _orderDal.GetAll(o => o.UserId == userId);
-        return new SuccessDataResult<List<Order>>(orders, "Kullanıcının siparişleri listelendi.");
+        var orders = _orderDal.GetAll(o => o.CustomerId == userId);
+        return new SuccessDataResult<List<Order>>(orders, "User orders listed.");
     }
+
     public IResult CreateOrder(OrderCreateDto dto)
     {
         if (dto == null)
-            return new ErrorResult("Geçersiz sipariş verisi.");
+            return new ErrorResult("Invalid order data.");
 
         var order = new Order
         {
-            UserId = dto.UserId,
+            CustomerId = dto.CustomerId,
             AddressId = dto.AddressId,
-            CouponCode = dto.CouponCode,
-            PaymentMethod = dto.PaymentMethod,
-            CreatedAt = DateTime.Now,
-            Status = "Hazırlanıyor"
-            // Diğer alanları ihtiyaca göre ekle
+            TotalAmount = dto.Payment.Amount,
+            OrderDate = DateTime.Now,
+            Status = "Pending"
         };
 
         _orderDal.Add(order);
-        return new SuccessResult("Sipariş oluşturuldu.");
+        return new SuccessResult("Order created successfully.");
     }
-
 }
-
-
