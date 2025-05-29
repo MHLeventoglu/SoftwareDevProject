@@ -5,6 +5,7 @@ using Core.Utilities.Results;
 using Core.Entities.Concrete;
 using DataAccess.Abstract.Users;
 using Core.Entities.Concrete;
+using Entities.DTOs.UserDtos;
 
 namespace Business.Concrete.Users;
 
@@ -68,5 +69,20 @@ public class UserManager : IUserService
             return new ErrorDataResult<List<OperationClaim>>("No claims found for this user.");
 
         return new SuccessDataResult<List<OperationClaim>>(claims, "Claims retrieved successfully.");
+    }
+
+    public IResult Register(UserForRegisterDto dto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IResult SendVerificationEmail(string email)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IResult VerifyEmail(string email, string verificationCode)
+    {
+        throw new NotImplementedException();
     }
 }

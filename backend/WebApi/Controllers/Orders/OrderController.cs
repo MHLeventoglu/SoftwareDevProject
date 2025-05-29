@@ -22,7 +22,7 @@ namespace WebApi.Controllers
             return Ok(orders);
         }
 
-        [HttpGet("detail/{id}")]
+        [HttpGet("detail/{id}")]// burası düzeltilecek
         public IActionResult GetOrderDetail(int id)
         {
             var order = _orderService.GetById(id);
