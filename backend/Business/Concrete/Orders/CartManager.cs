@@ -3,7 +3,6 @@ using Core.Utilities.Results;
 using Entities.Concrete.Orders;
 using DataAccess.Abstract.Orders;
 
-
 namespace Business.Concrete.Orders;
 
 public class CartManager : ICartService

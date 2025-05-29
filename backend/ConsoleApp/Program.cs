@@ -4,7 +4,7 @@ using Business.Abstract.Products;
 using Business.DependencyResolvers.Autofac;
 using DataAccess.Concrete.EntityFramework;
 using Microsoft.EntityFrameworkCore;
-
+using Core.Utilities.Helpers; // test anaclı eklenyor
 // Ensure database is created
 using (var context = new DataBaseContext())
 {
@@ -33,4 +33,21 @@ if (result.Success)
 else
 {
     Console.WriteLine($"Error: {result.Message}");
+}
+
+Console.WriteLine("Email gönderme denemesi yapılıyor...");
+
+bool mailGonderildi = EmailHelper.SendEmail(
+    to: "muazhamzaleventoglu@gmail.com",           // Kime göndermek istiyorsan
+    subject: "Deneme Maili",             // Konu
+    body: "<b>Bu bir test mailidir.</b>" // HTML destekli içerik
+);
+
+if (mailGonderildi)
+{
+    Console.WriteLine("✅ Mail başarıyla gönderildi.");
+}
+else
+{
+    Console.WriteLine("❌ Mail gönderilemedi.");
 }

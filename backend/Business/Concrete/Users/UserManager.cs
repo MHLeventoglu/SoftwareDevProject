@@ -1,8 +1,10 @@
+using System.Net;
+using System.Net.Mail;
 using Business.Abstract.Users;
 using Core.Utilities.Results;
 using Core.Entities.Concrete;
 using DataAccess.Abstract.Users;
-using Entities.Concrete.Users;
+using Core.Entities.Concrete;
 
 namespace Business.Concrete.Users;
 

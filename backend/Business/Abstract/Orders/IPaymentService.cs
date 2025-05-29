@@ -2,7 +2,8 @@ using Entities.Concrete.Orders;
 
 namespace Business.Abstract.Orders;
 
-public interface IPaymentService : IBaseService<Payment>
+public interface IPaymentService
 {
-    // Payment'a özel metotlar varsa buraya ekle
+    IResult StartPayment(PaymentRequest request);
+    IDataResult<string> GetPaymentStatus(string id);
 }
