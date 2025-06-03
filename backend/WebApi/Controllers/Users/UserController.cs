@@ -2,7 +2,7 @@ using Business.Abstract.Users;
 using Core.Entities.Concrete;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers
+namespace WebApi.Controllers.Users
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -15,61 +15,56 @@ namespace WebApi.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
+  [HttpGet("getall")]
         public IActionResult GetAll()
         {
             var result = _userService.GetAll();
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result.Data);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetUserById(int id)
+        [HttpGet("getbyid/{id}")]
+        public IActionResult GetById(int id)
         {
             var result = _userService.GetById(id);
-            if (!result.Success)
-                return NotFound(result.Message);
-
-            return Ok(result.Data);
+            if (result.Success)
+                return Ok(result);
+            return NotFound(result.Message);
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public IActionResult Add([FromBody] User user)
         {
             var result = _userService.Add(user);
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("update/{id}")]
         public IActionResult Update(int id, [FromBody] User user)
         {
             if (id != user.Id)
-                return BadRequest("ID uyuşmuyor.");
+                return BadRequest();
 
             var result = _userService.Update(user);
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public IActionResult Delete(int id)
         {
             var userResult = _userService.GetById(id);
-            if (!userResult.Success)
+            if (!userResult.Success || userResult.Data == null)
                 return NotFound(userResult.Message);
 
             var result = _userService.Delete(userResult.Data);
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
         }
 
         [HttpPost("send-verification-email")]
