@@ -1,6 +1,5 @@
 using Business.Abstract.Users;
 using Entities.Concrete.Users;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers.Users
@@ -9,45 +8,63 @@ namespace WebApi.Controllers.Users
     [ApiController]
     public class StaffTypeController : ControllerBase
     {
-         private readonly IStaffTypeService _staffTypeService;
+        private readonly IStaffTypeService _staffTypeService;
 
         public StaffTypeController(IStaffTypeService staffTypeService)
         {
             _staffTypeService = staffTypeService;
         }
 
-        [HttpGet]
+        [HttpGet("getall")]
         public IActionResult GetAll()
         {
             var result = _staffTypeService.GetAll();
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result.Data);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
         }
 
-        [HttpPost]
+        [HttpGet("getbyid/{id}")]
+        public IActionResult GetById(int id)
+        {
+            var result = _staffTypeService.GetById(id);
+            if (result.Success)
+                return Ok(result);
+            return NotFound(result.Message);
+        }
+
+        [HttpPost("add")]
         public IActionResult Add([FromBody] StaffType type)
         {
             var result = _staffTypeService.Add(type);
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
         }
 
-        [HttpDelete("{id}")]
+        [HttpPut("update/{id}")]
+        public IActionResult Update(int id, [FromBody] StaffType type)
+        {
+            if (id != type.Id)
+                return BadRequest("ID uyuşmuyor.");
+
+            var result = _staffTypeService.Update(type);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
+        }
+
+        [HttpDelete("delete/{id}")]
         public IActionResult Delete(int id)
         {
             var staffTypeResult = _staffTypeService.GetById(id);
-            if (!staffTypeResult.Success)
-                return BadRequest(staffTypeResult.Message);
+            if (!staffTypeResult.Success || staffTypeResult.Data == null)
+                return NotFound(staffTypeResult.Message);
 
             var result = _staffTypeService.Delete(staffTypeResult.Data);
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
         }
     }
 }

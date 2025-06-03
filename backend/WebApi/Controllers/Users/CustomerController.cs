@@ -1,6 +1,5 @@
 using Business.Abstract.Users;
 using Entities.Concrete.Users;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers.Users
@@ -16,49 +15,56 @@ namespace WebApi.Controllers.Users
             _customerService = customerService;
         }
 
-        [HttpGet]
+        [HttpGet("getall")]
         public IActionResult GetAll()
         {
             var result = _customerService.GetAll();
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result.Data);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("getbyid/{id}")]
         public IActionResult GetById(int id)
         {
             var result = _customerService.GetById(id);
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result.Data);
+            if (result.Success)
+                return Ok(result);
+            return NotFound(result.Message);
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public IActionResult Add([FromBody] Customer customer)
         {
             var result = _customerService.Add(customer);
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
         }
 
-        [HttpDelete("{id}")]
+        [HttpPut("update/{id}")]
+        public IActionResult Update(int id, [FromBody] Customer customer)
+        {
+            if (id != customer.Id)
+                return BadRequest("ID uyuşmuyor.");
+
+            var result = _customerService.Update(customer);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
+        }
+
+        [HttpDelete("delete/{id}")]
         public IActionResult Delete(int id)
         {
             var customerResult = _customerService.GetById(id);
-            if (!customerResult.Success)
-             return NotFound(customerResult.Message);
+            if (!customerResult.Success || customerResult.Data == null)
+                return NotFound(customerResult.Message);
 
-   
-             var result = _customerService.Delete(customerResult.Data);
-            if (!result.Success)
+            var result = _customerService.Delete(customerResult.Data);
+            if (result.Success)
+                return Ok(result);
             return BadRequest(result.Message);
-
-            return Ok(result);
         }
     }
 }
