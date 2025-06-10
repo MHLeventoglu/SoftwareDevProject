@@ -25,6 +25,15 @@ builder.Services.AddControllers();
 // builder.Services.AddSingleton<ICarService, CarManager>();
 // builder.Services.AddSingleton<ICarDal, EfCarDal>();
 // Instead of thing that above I used Autofac
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") 
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             
 var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
@@ -56,7 +65,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 
 // app.UseAuthentication();
