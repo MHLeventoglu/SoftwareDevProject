@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Navbar from '@/components/Navbar';
+
 
 interface Product {
   id: number;
@@ -203,8 +203,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      {/* Header ve ana içerik */}
       <header className="bg-white shadow-sm py-4 px-6">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <h1 className="text-2xl font-bold text-indigo-600">RoboSales</h1>
