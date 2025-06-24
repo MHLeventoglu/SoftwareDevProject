@@ -79,13 +79,14 @@ namespace WebApi.Controllers.Users
             return Ok(result);
         }
 
-        [HttpPost("verify-email")]
+        [HttpGet("verify-email")]
         public IActionResult VerifyEmail([FromQuery] string email, [FromQuery] string token)
         {
             var result = _userService.VerifyEmail(email, token);
             if (!result.Success)
                 return BadRequest(result.Message);
-            return Ok(result);
+            // Başarı durumunda HTML ve charset ile döndür
+            return Content(result.Message, "text/html; charset=utf-8");
         }
 
         [HttpPost("send-notification")]

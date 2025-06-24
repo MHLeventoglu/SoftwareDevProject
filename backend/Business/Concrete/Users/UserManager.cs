@@ -5,7 +5,7 @@ using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccess.Abstract.Users;
 using Entities.DTOs.UserDtos;
-using System.Linq; // <-- Dikkat! First() için gerekebilir
+using System.Linq;
 
 namespace Business.Concrete.Users;
 
@@ -88,8 +88,15 @@ public class UserManager : IUserService
         user.EmailConfirmed = false;
         _userDal.Update(user);
 
-        var link = $"http://localhost:5070/api/User/verify-email?email={email}&token={token}";
-        var body = $"Lütfen e-posta adresinizi doğrulamak için bu linke tıklayın: {link}";
+        // Email ve token'ı URL encode et
+        var encodedEmail = System.Net.WebUtility.UrlEncode(email);
+        var encodedToken = System.Net.WebUtility.UrlEncode(token);
+        var link = $"http://localhost:5070/api/User/verify-email?email={encodedEmail}&token={encodedToken}";
+        var body = $@"<meta charset='UTF-8'><div style='font-family:sans-serif;'>
+            <h2>E-posta Doğrulama</h2>
+            <p>Lütfen e-posta adresinizi doğrulamak için bu linke tıklayın: <a href='{link}'>Doğrula</a></p>
+            <p>Veya bu linki tarayıcınıza yapıştırın: {link}</p>
+        </div>";
 
         var sent = Core.Utilities.Helpers.EmailHelper.SendEmail(email, "E-posta Doğrulama", body);
         if (!sent)
@@ -118,7 +125,10 @@ public class UserManager : IUserService
         user.EmailVerificationTokenExpiry = null;
         _userDal.Update(user);
 
-        return new SuccessResult("E-posta doğrulandı.");
+        // Başarı durumunda HTML döndürmek için:
+        return new SuccessResult(
+            "<h2>E-posta doğrulandı!</h2><p>Hesabınız başarıyla doğrulandı.</p>"
+        );
     }
 
     public IResult SendNotification(string email, string message)
@@ -130,20 +140,22 @@ public class UserManager : IUserService
             return new ErrorResult("Birden fazla kullanıcı var, veritabanı hatası!");
         var user = users.First();
 
-        var sent = Core.Utilities.Helpers.EmailHelper.SendEmail(email, "Bildirim", message);
+        // Mesajı HTML şablonuna sar, başa meta charset ekle
+        var htmlBody = $@"<meta charset='UTF-8'><div style='font-family:sans-serif;'>
+            <h2>Yeni Bildirim</h2>
+            <p>{System.Net.WebUtility.HtmlEncode(message).Replace("\n", "<br>")}</p>
+        </div>";
+
+        var sent = Core.Utilities.Helpers.EmailHelper.SendEmail(email, "Bildirim", htmlBody);
         if (!sent)
             return new ErrorResult("Bildirim maili gönderilemedi.");
 
         return new SuccessResult("Bildirim maili gönderildi.");
     }
 
-    // --- Buradan itibaren eklenen kısım ---
     public IDataResult<List<OperationClaim>> GetClaims(User user)
     {
         var claims = _userDal.GetClaims(user);
-        if (claims == null || claims.Count == 0)
-            return new ErrorDataResult<List<OperationClaim>>("No claims found for this user.");
-
-        return new SuccessDataResult<List<OperationClaim>>(claims, "Claims retrieved successfully.");
+        return new SuccessDataResult<List<OperationClaim>>(claims ?? new List<OperationClaim>(), "Claims retrieved successfully.");
     }
 }
