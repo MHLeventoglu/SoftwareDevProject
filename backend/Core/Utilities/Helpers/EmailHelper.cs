@@ -20,6 +20,8 @@ namespace Core.Utilities.Helpers
                     message.Subject = subject;
                     message.Body = body;
                     message.IsBodyHtml = true;
+                    message.BodyEncoding = System.Text.Encoding.UTF8;
+                    message.SubjectEncoding = System.Text.Encoding.UTF8;
 
                     client.Send(message);
                     return true;
