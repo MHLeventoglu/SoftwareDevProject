@@ -7,6 +7,7 @@ using Core.Utilities.Security.Jwt;
 using Core.Utilities.Security.Hashing;
 using Entities.DTOs.UserDtos;
 using Business.Constants;
+using Entities.Concrete.Users;
 
 
 namespace Business.Concrete;
@@ -34,8 +35,19 @@ public class AuthManager:IAuthService
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 Status = true
+            };var customer = new Customer
+            {
+                Email = userForRegisterDto.Email,
+                FirstName = userForRegisterDto.FirstName,
+                Surname = userForRegisterDto.Surname,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                Status = true,
+                Balance = 0, // Default balance
             };
-            _userService.Add(user);
+            
+            var addResult = _userService.Add(user);
+            var customerAddResult = _userService.Add(customer);
             return  new SuccessDataResult<User>(user,Messages.UserRegistered);
         }
 
