@@ -28,6 +28,7 @@ namespace WebApi.Controllers.Users
         [HttpPost("register")]
         public IActionResult Register([FromBody] UserForRegisterDto registerDto)
         {
+            
             var result = _authService.Register(registerDto, registerDto.Password);
             if (result.Success)
                 return Ok(result);

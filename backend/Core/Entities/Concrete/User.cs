@@ -13,7 +13,7 @@ public class User:IEntity
     public string? PhoneNumber { get; set; }
     public byte[]? PasswordHash { get; set; }
     public byte[]? PasswordSalt { get; set; }
-    public bool Status { get; set; } = true; // Varsayılan olarak aktif kullanıcı
+    public bool Status { get; set; } = false;
     public DateTime DateAdded { get; set; }
     public bool EmailConfirmed { get; set; } = false;
     public string? EmailVerificationToken { get; set; }

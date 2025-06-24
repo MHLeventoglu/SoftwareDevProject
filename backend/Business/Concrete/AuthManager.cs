@@ -33,9 +33,11 @@ public class AuthManager:IAuthService
                 Surname = userForRegisterDto.Surname,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                Status = true
+                Status = false
             };
             _userService.Add(user);
+            // Kayıt sonrası otomatik doğrulama maili gönder
+            _userService.SendVerificationEmail(user.Email);
             return  new SuccessDataResult<User>(user,Messages.UserRegistered);
         }
 

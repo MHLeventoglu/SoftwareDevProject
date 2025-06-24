@@ -69,8 +69,20 @@ public class UserManager : IUserService
 
     public IResult Register(UserForRegisterDto dto)
     {
-        // Burada register işlemini kendi ihtiyacına göre geliştirebilirsin.
-        return new SuccessResult("Register işlemi tamamlandı.");
+        // Şifre hashleme AuthManager'da, burada temel kullanıcı oluşturuluyor
+        var user = new User
+        {
+            Email = dto.Email,
+            FirstName = dto.FirstName,
+            Surname = dto.Surname,
+            // PasswordHash, PasswordSalt AuthManager'da atanıyor
+            Status = false, // Pasif olarak kaydediliyor
+            EmailConfirmed = false,
+            DateAdded = DateTime.Now
+        };
+        _userDal.Add(user);
+        SendVerificationEmail(user.Email!);
+        return new SuccessResult("Register işlemi tamamlandı. Lütfen e-posta adresinizi doğrulayın.");
     }
 
     public IResult SendVerificationEmail(string email)
@@ -121,6 +133,7 @@ public class UserManager : IUserService
             return new ErrorResult("Kodun süresi dolmuş.");
 
         user.EmailConfirmed = true;
+        user.Status = true; // Doğrulama sonrası aktif!
         user.EmailVerificationToken = null;
         user.EmailVerificationTokenExpiry = null;
         _userDal.Update(user);
