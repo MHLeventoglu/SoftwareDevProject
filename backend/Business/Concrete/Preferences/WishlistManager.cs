@@ -59,7 +59,7 @@ namespace Business.Concrete.Preferences
 
         public IDataResult<Wishlist> GetByUserId(int userId)
         {
-            var wishlist = _wishlistDal.Get(w => w.Id == userId);
+            var wishlist = _wishlistDal.Get(w => w.CustomerId == userId);
             if (wishlist == null)
             {
                 return new ErrorDataResult<Wishlist>("Wishlist not found for the specified user.");

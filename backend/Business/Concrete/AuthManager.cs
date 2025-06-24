@@ -15,11 +15,13 @@ namespace Business.Concrete;
 public class AuthManager:IAuthService
 {
     private IUserService _userService;
+    private ICustomerService _customerService;
         private ITokenHelper _tokenHelper;
 
-        public AuthManager(IUserService userService, ITokenHelper tokenHelper)
+        public AuthManager(IUserService userService, ITokenHelper tokenHelper, ICustomerService customerService)
         {
             _userService = userService;
+            _customerService = customerService;
             _tokenHelper = tokenHelper;
         }
 
@@ -46,14 +48,14 @@ public class AuthManager:IAuthService
                 Balance = 0, // Default balance
             };
             
-            var addResult = _userService.Add(user);
-            var customerAddResult = _userService.Add(customer);
+            var userAddResult = _userService.Add(user);
+            var customerAddResult = _customerService.Add(customer);
             return  new SuccessDataResult<User>(user,Messages.UserRegistered);
         }
 
         public IDataResult<User> Login(UserForLoginDto userForLoginDto)
         {
-            var userToCheck = _userService.GetByEmail("paul@paul.com").Data;
+            var userToCheck = _userService.GetByEmail(userForLoginDto.Email).Data;
             if (userToCheck==null)
             {
                 return new ErrorDataResult<User>(Messages.UserNotFound);
