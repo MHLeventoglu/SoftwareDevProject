@@ -1,7 +1,12 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Business.DependencyResolvers.Autofac;
+using Core.Utilities.IoC;
+using Core.Utilities.Security.Encryption;
+using Core.Utilities.Security.Jwt;
 using DataAccess.Concrete.EntityFramework;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 using (var context = new DataBaseContext())
 {
@@ -16,37 +21,49 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory()).Conf
 });
 
 
-builder.Services.AddOpenApi();
+builder.Services.AddControllers();
+// builder.Services.AddSingleton<ICarService, CarManager>();
+// builder.Services.AddSingleton<ICarDal, EfCarDal>();
+// Instead of thing that above I used Autofac
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            
+var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
+// Oldu ve nasıl oldupuyla ilgili hiçbir fikrim yok
+ServiceTool.Create(builder.Services);
+// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//     .AddJwtBearer(options =>
+//     {
+//         options.TokenValidationParameters = new TokenValidationParameters
+//         {
+//             ValidateIssuer = true,
+//             ValidateAudience = true,
+//             ValidateLifetime = true,
+//             ValidIssuer = tokenOptions?.Issuer,
+//             ValidAudience = tokenOptions?.Audience,
+//             ValidateIssuerSigningKey = true,
+//             IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions?.SecurityKey!)
+//         };
+//     });
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
+// app.UseAuthentication();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+// app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-            new WeatherForecast
-            (
-                DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                Random.Shared.Next(-20, 55),
-                summaries[Random.Shared.Next(summaries.Length)]
-            ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
+app.MapControllers();
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)

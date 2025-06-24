@@ -15,45 +15,56 @@ namespace WebApi.Controllers.Users
             _staffService = staffService;
         }
 
-        [HttpGet]
+        [HttpGet("getall")]
         public IActionResult GetAll()
         {
             var result = _staffService.GetAll();
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result.Data);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("getbyid/{id}")]
         public IActionResult GetById(int id)
         {
             var result = _staffService.GetById(id);
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result.Data);
+            if (result.Success)
+                return Ok(result);
+            return NotFound(result.Message);
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public IActionResult Add([FromBody] Staff staff)
         {
             var result = _staffService.Add(staff);
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
         }
 
-        [HttpDelete("{id}")]
+        [HttpPut("update/{id}")]
+        public IActionResult Update(int id, [FromBody] Staff staff)
+        {
+            if (id != staff.Id)
+                return BadRequest("ID uyuşmuyor.");
+
+            var result = _staffService.Update(staff);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
+        }
+
+        [HttpDelete("delete/{id}")]
         public IActionResult Delete(int id)
         {
-            var staff = _staffService.GetById(id);
-            var result = _staffService.Delete(staff.Data);
-            if (!result.Success)
-                return BadRequest(result.Message);
+            var staffResult = _staffService.GetById(id);
+            if (!staffResult.Success || staffResult.Data == null)
+                return NotFound(staffResult.Message);
 
-            return Ok(result);
+            var result = _staffService.Delete(staffResult.Data);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
         }
     }
 }

@@ -8,60 +8,68 @@ namespace WebApi.Controllers.Orders
     [ApiController]
     public class CartItemController : ControllerBase
     {
-         private readonly ICartItemService _cartItemService;
+        private readonly ICartItemService _cartItemService;
 
         public CartItemController(ICartItemService cartItemService)
         {
             _cartItemService = cartItemService;
         }
 
-        [HttpGet]
+        [HttpGet("getall")]
         public IActionResult GetAll()
         {
-            var items = _cartItemService.GetAll();
-            return Ok(items);
+            var result = _cartItemService.GetAll();
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("getbyid/{id}")]
         public IActionResult GetById(int id)
         {
-            var item = _cartItemService.GetById(id);
-            if (item == null)
-                return NotFound();
-
-            return Ok(item);
-        }
-
-        [HttpPost]
-        public IActionResult Add([FromBody] CartItem cartItem)
-        {
-            _cartItemService.Add(cartItem);
-            return Ok();
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] CartItem cartItem)
-        {
-            var result = _cartItemService.Update(cartItem);
-            if (!result.Success)
-            return NotFound(result.Message);
+            var result = _cartItemService.GetById(id);
+            if (!result.Success || result.Data == null)
+                return NotFound(result);
 
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
+        [HttpPost("add")]
+        public IActionResult Add([FromBody] CartItem cartItem)
+        {
+            var result = _cartItemService.Add(cartItem);
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
+        [HttpPut("update/{id}")]
+        public IActionResult Update(int id, [FromBody] CartItem cartItem)
+        {
+            if (id != cartItem.Id)
+                return BadRequest("Gönderilen ID ile ürün ID'si uyuşmuyor.");
+
+            var result = _cartItemService.Update(cartItem);
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
+        [HttpDelete("delete/{id}")]
         public IActionResult Delete(int id)
         {
             var cartItemResult = _cartItemService.GetById(id);
-            if (!cartItemResult.Success)
-            return NotFound(cartItemResult.Message);
+            if (!cartItemResult.Success || cartItemResult.Data == null)
+                return NotFound(cartItemResult);
 
-      
             var result = _cartItemService.Delete(cartItemResult.Data);
-            if (!result.Success)
-            return BadRequest(result.Message);
+            if (result.Success)
+                return Ok(result);
 
-            return Ok(result);
+            return BadRequest(result);
         }
     }
 }

@@ -2,7 +2,7 @@ using Business.Abstract.Products;
 using Entities.Concrete.Products;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers
+namespace WebApi.Controllers.Products
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -15,56 +15,56 @@ namespace WebApi.Controllers
             _categoryService = categoryService;
         }
 
-        [HttpGet]
+        [HttpGet("getall")]
         public IActionResult GetAll()
         {
-            var categories = _categoryService.GetAll();
-            return Ok(categories);
+            var result = _categoryService.GetAll();
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("getbyid/{id}")]
         public IActionResult GetById(int id)
         {
-            var category = _categoryService.GetById(id);
-            if (category == null)
-                return NotFound();
-            return Ok(category);
+            var result = _categoryService.GetById(id);
+            if (result.Success)
+                return Ok(result);
+            return NotFound(result.Message);
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public IActionResult Add([FromBody] Category category)
         {
-            _categoryService.Add(category);
-            return Ok();
+            var result = _categoryService.Add(category);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("update/{id}")]
         public IActionResult Update(int id, [FromBody] Category category)
         {
             if (id != category.Id)
                 return BadRequest();
 
             var result = _categoryService.Update(category);
-            if (!result.Success)
-                return NotFound();
-
-            return Ok(result);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public IActionResult Delete(int id)
         {
-            var categoryToDelete = _categoryService.GetById(id);
-            if (!categoryToDelete.Success || categoryToDelete.Data == null)
-                return NotFound();
+            var categoryResult = _categoryService.GetById(id);
+            if (!categoryResult.Success || categoryResult.Data == null)
+                return NotFound(categoryResult.Message);
 
-            var result = _categoryService.Delete(categoryToDelete.Data);
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result);
+            var result = _categoryService.Delete(categoryResult.Data);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
         }
-
-       
     }
 }

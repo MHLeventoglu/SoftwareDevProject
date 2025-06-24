@@ -1,6 +1,5 @@
 using Business.Abstract.Preferences;
 using Entities.Concrete.Preferences;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers.Preferences
@@ -9,7 +8,7 @@ namespace WebApi.Controllers.Preferences
     [ApiController]
     public class WishlistController : ControllerBase
     {
-         private readonly IWishlistService _wishlistService;
+        private readonly IWishlistService _wishlistService;
 
         public WishlistController(IWishlistService wishlistService)
         {
@@ -20,35 +19,34 @@ namespace WebApi.Controllers.Preferences
         public IActionResult GetByUserId(int userId)
         {
             var result = _wishlistService.GetByUserId(userId);
-            if (!result.Success)
-                return BadRequest(result.Message);
+            if (result.Success)
+                return Ok(result);
 
-            return Ok(result.Data);
+            return BadRequest(result);
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public IActionResult Add([FromBody] Wishlist item)
         {
             var result = _wishlistService.Add(item);
-            if (!result.Success)
-                return BadRequest(result.Message);
+            if (result.Success)
+                return Ok(result);
 
-            return Ok(result);
+            return BadRequest(result);
         }
 
-        [HttpDelete("{productId}")]
+        [HttpDelete("delete/{productId}")]
         public IActionResult Delete(int productId)
         {
             var wishlistResult = _wishlistService.GetById(productId);
-            if (!wishlistResult.Success)
-                return NotFound(wishlistResult.Message);
+            if (!wishlistResult.Success || wishlistResult.Data == null)
+                return NotFound(wishlistResult);
 
-        
             var result = _wishlistService.Delete(wishlistResult.Data);
-            if (!result.Success)
-                return BadRequest(result.Message);
+            if (result.Success)
+                return Ok(result);
 
-            return Ok(result);
+            return BadRequest(result);
         }
     }
 }

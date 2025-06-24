@@ -2,56 +2,69 @@ using Microsoft.AspNetCore.Mvc;
 using Business.Abstract.Products;
 using Entities.Concrete.Products;
 
-[ApiController]
-[Route("api/[controller]")]
-public class ReviewController : ControllerBase
+namespace WebApi.Controllers.Products
 {
-    private readonly IReviewService _reviewService;
-
-    public ReviewController(IReviewService reviewService)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ReviewController : ControllerBase
     {
-        _reviewService = reviewService;
-    }
+        private readonly IReviewService _reviewService;
 
-    [HttpGet]
-    public IActionResult GetAll()
-    {
-        var result = _reviewService.GetAll();
-        return Ok(result);
-    }
+        public ReviewController(IReviewService reviewService)
+        {
+            _reviewService = reviewService;
+        }
 
-    [HttpGet("{id}")]
-    public IActionResult GetById(int id)
-    {
-        var result = _reviewService.GetById(id);
-        return Ok(result);
-    }
+        [HttpGet("getall")]
+        public IActionResult GetAll()
+        {
+            var result = _reviewService.GetAll();
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
+        }
 
-    [HttpPost]
-    public IActionResult Add([FromBody] Review review)
-    {
-        var result = _reviewService.Add(review);
-        return Ok(result);
-    }
+        [HttpGet("getbyid/{id}")]
+        public IActionResult GetById(int id)
+        {
+            var result = _reviewService.GetById(id);
+            if (result.Success)
+                return Ok(result);
+            return NotFound(result.Message);
+        }
 
-    [HttpPut("{id}")]
-    public IActionResult Update(int id, [FromBody] Review review)
-    {
-        if (id != review.Id)
-            return BadRequest();
-            
-        var result = _reviewService.Update(review);
-        return Ok(result);
-    }
+        [HttpPost("add")]
+        public IActionResult Add([FromBody] Review review)
+        {
+            var result = _reviewService.Add(review);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
+        }
 
-    [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
-    {
-        var review = _reviewService.GetById(id);
-        if (!review.Success)
-            return NotFound();
+        [HttpPut("update/{id}")]
+        public IActionResult Update(int id, [FromBody] Review review)
+        {
+            if (id != review.Id)
+                return BadRequest();
 
-        var result = _reviewService.Delete(review.Data);
-        return Ok(result);
+            var result = _reviewService.Update(review);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
+        }
+
+        [HttpDelete("delete/{id}")]
+        public IActionResult Delete(int id)
+        {
+            var reviewResult = _reviewService.GetById(id);
+            if (!reviewResult.Success || reviewResult.Data == null)
+                return NotFound(reviewResult.Message);
+
+            var result = _reviewService.Delete(reviewResult.Data);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
+        }
     }
 }
