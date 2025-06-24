@@ -2,11 +2,7 @@ using Business.Abstract.Orders;
 using Core.Utilities.Results;
 using DataAccess.Abstract.Orders;
 using Entities.Concrete.Orders;
-<<<<<<< HEAD
-using Entities.DTOs.OrderDtos; // Bunu eklemeyi unutma
-=======
 using Entities.DTOs.OrderDtos;
->>>>>>> origin
 
 namespace Business.Concrete.Orders;
 

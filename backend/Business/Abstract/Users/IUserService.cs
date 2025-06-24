@@ -7,12 +7,8 @@ namespace Business.Abstract.Users
 {
     public interface IUserService: IBaseService<User>
     {
-        IResult Add(User entity);
-        IResult Update(User entity);
-        IResult Delete(User entity);
         IDataResult<User> GetByEmail(string email);
         IDataResult<List<OperationClaim>> GetClaims(User user);
-        IDataResult<User> GetById(int id);
         IResult Register(UserForRegisterDto dto);
         IResult SendVerificationEmail(string email);
         IResult VerifyEmail(string email, string code);
