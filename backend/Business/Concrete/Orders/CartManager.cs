@@ -136,19 +136,25 @@ public class CartManager : ICartService
         var user = userResult.Data;
         if (user is not Entities.Concrete.Users.Customer customer)
             return new ErrorResult("User is not a customer.");
-        int? cartId = customer.ActiveCartId;
-        if (!cartId.HasValue)
+        var cartResult = GetCartByUserId(userId);
+        Cart? cart = null;
+        if (cartResult.Success && cartResult.Data != null)
+        {
+            cart = cartResult.Data;
+        }
+        else
+        {
             return new ErrorResult("User does not have an active cart.");
-        var cart = _cartDal.Get(c => c.Id == cartId.Value);
-        if (cart == null)
-            return new ErrorResult("Cart not found.");
-        if (cart.Items == null)
+        }
+        if (cart.Items == null || cart.Items.Count == 0)
             return new ErrorResult("Cart is empty.");
         var itemToRemove = cart.Items.FirstOrDefault(i => i.ProductId == productId);
         if (itemToRemove == null)
             return new ErrorResult("Product not found in cart.");
-        cart.Items.Remove(itemToRemove);
-        _cartDal.Update(cart);
+        var removeResult = _cartItemService.Delete(itemToRemove);
+        if (!removeResult.Success)
+            return new ErrorResult("Failed to remove item from cart.");
+        cart.Items.Remove(itemToRemove); // Sadece memory'den de çıkar
         return new SuccessResult("Item removed from cart successfully.");
     }
 }
