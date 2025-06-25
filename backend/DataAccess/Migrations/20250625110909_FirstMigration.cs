@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Innitial : Migration
+    public partial class FirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -98,7 +98,10 @@ namespace DataAccess.Migrations
                     PasswordSalt = table.Column<byte[]>(type: "BLOB", nullable: true),
                     Status = table.Column<bool>(type: "INTEGER", nullable: false),
                     DateAdded = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    Role = table.Column<string>(type: "TEXT", nullable: false),
+                    Role = table.Column<string>(type: "TEXT", nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    EmailVerificationToken = table.Column<string>(type: "TEXT", nullable: true),
+                    EmailVerificationTokenExpiry = table.Column<DateTime>(type: "TEXT", nullable: true),
                     UserType = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false),
                     Balance = table.Column<float>(type: "REAL", nullable: true, defaultValue: 0f),
                     ActiveCartId = table.Column<int>(type: "INTEGER", nullable: true)
@@ -121,7 +124,7 @@ namespace DataAccess.Migrations
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     AverageRating = table.Column<double>(type: "REAL", nullable: false),
                     StockCount = table.Column<short>(type: "INTEGER", nullable: false),
-                    DateAdded = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                    DateAdded = table.Column<DateTime>(type: "TEXT", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP")
                 },
                 constraints: table =>
                 {

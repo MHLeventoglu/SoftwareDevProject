@@ -19,11 +19,12 @@ public class AuthManager:IAuthService
     private IStaffService _staffService;
     private ITokenHelper _tokenHelper;
 
-    public AuthManager(IUserService userService, ITokenHelper tokenHelper, ICustomerService customerService)
+    public AuthManager(IUserService userService, ITokenHelper tokenHelper, ICustomerService customerService , IStaffService staffService)
     {
         _userService = userService;
         _tokenHelper = tokenHelper;
         _customerService = customerService;
+        _staffService = staffService;
         }
 
         public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
@@ -46,25 +47,31 @@ public class AuthManager:IAuthService
                 Surname = userForRegisterDto.Surname,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                Status = true,
+                Status = false,
                 Balance = 0, // Default balance
                 ActiveCartId = null // No active cart initially
             };
             
             // var addResult = _userService.Add(user);
             var customerAddResult = _customerService.Add(customer);
-            // if (!addResult.Success)
-            // return new ErrorDataResult<User>(addResult.Message);
 
-            // Assign default customer role
-            var roleResult = _userService.AssignRole((int)customer.Id, Roles.User);
-            if (!roleResult.Success)
-                return new ErrorDataResult<User>(roleResult.Message);
+            var access_token = CreateAccessToken(customer).Data;
+            _userService.SendVerificationEmail(customer.Email,access_token.Token );
+
+            // if (!addResult.Success)
+        // return new ErrorDataResult<User>(addResult.Message);
+
+        // Assign default customer role
+        var roleResult = _userService.AssignRole((int)customer.Id, Roles.User);
+        if (!roleResult.Success)
+        {
+            return new ErrorDataResult<User>(roleResult.Message);
+        }
 
             return new SuccessDataResult<User>(customer, Messages.UserRegistered);
         }
         
-        public IDataResult<Staff> RegisterAdmin(UserForRegisterDto userForRegisterDto, string password)
+         public IDataResult<Staff> RegisterAdmin(UserForRegisterDto userForRegisterDto, string password)
         {
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(password,out passwordHash,out passwordSalt);

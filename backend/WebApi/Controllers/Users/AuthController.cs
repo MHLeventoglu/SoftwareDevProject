@@ -48,14 +48,14 @@ namespace WebApi.Controllers.Users
             }
 
             var registerResult = _authService.Register(userForRegisterDto, userForRegisterDto.Password!);
-            var result = _authService.CreateAccessToken(registerResult.Data);
-            if (result.Success)
+            if (registerResult.Success)
             {
-                return Ok(result.Data);
+                return Ok(registerResult.Data);
             }
 
-            return BadRequest(result.Message);
+            return BadRequest(registerResult.Message);
         }
+
         [HttpPost("registeradmin")]
         [AllowAnonymous]
         public IActionResult RegisterAdmin(UserForRegisterDto userForRegisterDto)

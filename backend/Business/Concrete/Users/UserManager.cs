@@ -85,7 +85,7 @@ public class UserManager : IUserService
         return new SuccessResult("Register işlemi tamamlandı. Lütfen e-posta adresinizi doğrulayın.");
     }
 
-    public IResult SendVerificationEmail(string email)
+    public IResult SendVerificationEmail(string email, string? access_token = null)
     {
         var users = _userDal.GetAll(u => u.Email == email);
         if (users.Count == 0)
@@ -103,7 +103,7 @@ public class UserManager : IUserService
         // Email ve token'ı URL encode et
         var encodedEmail = System.Net.WebUtility.UrlEncode(email);
         var encodedToken = System.Net.WebUtility.UrlEncode(token);
-        var link = $"http://localhost:5070/api/User/verify-email?email={encodedEmail}&token={encodedToken}";
+        var link = $"http://localhost:5070/api/User/verify-email?email={encodedEmail}&token={encodedToken}&access_token={access_token}";
         var body = $@"<meta charset='UTF-8'><div style='font-family:sans-serif;'>
             <h2>E-posta Doğrulama</h2>
             <p>Lütfen e-posta adresinizi doğrulamak için bu linke tıklayın: <a href='{link}'>Doğrula</a></p>
@@ -177,8 +177,6 @@ public class UserManager : IUserService
 
         return new SuccessResult($"Role {role} assigned successfully");
     }
-}
-
 
     public IDataResult<List<OperationClaim>> GetClaims(User user)
     {

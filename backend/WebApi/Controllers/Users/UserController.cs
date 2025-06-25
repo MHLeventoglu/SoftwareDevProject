@@ -72,17 +72,18 @@ namespace WebApi.Controllers.Users
         }
 
         [HttpPost("send-verification-email")]
-        public IActionResult SendVerificationEmail([FromBody] Entities.DTOs.UserDtos.UserForNotificationDto dto)
+        public IActionResult SendVerificationEmail([FromBody] Entities.DTOs.UserDtos.UserForNotificationDto dto,string accessToken)
         {
             if (dto == null || string.IsNullOrEmpty(dto.Email))
                 return BadRequest("Email cannot be null or empty.");
 
-            var result = _userService.SendVerificationEmail(dto.Email);
+            var result = _userService.SendVerificationEmail(dto.Email, accessToken);
             if (!result.Success)
                 return BadRequest(result.Message);
             return Ok(result);
         }
 
+        [AllowAnonymous]
         [HttpGet("verify-email")]
         public IActionResult VerifyEmail([FromQuery] string email, [FromQuery] string token)
         {
@@ -90,6 +91,7 @@ namespace WebApi.Controllers.Users
             if (!result.Success)
                 return BadRequest(result.Message);
             // Başarı durumunda HTML ve charset ile döndür
+            
             return Content(result.Message, "text/html; charset=utf-8");
         }
 

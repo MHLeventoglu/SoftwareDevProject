@@ -10,8 +10,9 @@ namespace Business.Abstract.Users
         IDataResult<User> GetByEmail(string email);
         IDataResult<List<OperationClaim>> GetClaims(User user);
         IResult Register(UserForRegisterDto dto);
-        IResult SendVerificationEmail(string email);
+        IResult SendVerificationEmail(string email,string token);
         IResult VerifyEmail(string email, string verificationCode);
+        IResult SendNotification(string email, string message);
         IResult AssignRole(int userId, string role);
     }
 }
