@@ -1,11 +1,14 @@
 using Business.Abstract.Products;
 using Entities.Concrete.Products;
+using Entities.Concrete.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers.Products
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Roles.Admin)]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;

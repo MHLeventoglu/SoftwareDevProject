@@ -85,4 +85,16 @@ public class UserManager : IUserService
     {
         throw new NotImplementedException();
     }
+
+    public IResult AssignRole(int userId, string role)
+    {
+        var user = _userDal.Get(u => u.Id == userId);
+        if (user == null)
+            return new ErrorResult("User not found");
+
+        var operationClaim = new OperationClaim { Name = role };
+        _userDal.AddUserClaim(user, operationClaim);
+
+        return new SuccessResult($"Role {role} assigned successfully");
+    }
 }

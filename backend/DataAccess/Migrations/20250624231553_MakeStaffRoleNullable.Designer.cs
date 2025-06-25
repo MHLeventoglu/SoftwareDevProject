@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20250513204850_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250624231553_MakeStaffRoleNullable")]
+    partial class MakeStaffRoleNullable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,18 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OperationClaims");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "user"
+                        });
                 });
 
             modelBuilder.Entity("Core.Entities.Concrete.User", b =>
@@ -56,12 +68,21 @@ namespace DataAccess.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("PasswordHash")
+                    b.Property<byte[]>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("BLOB");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Surname")
                         .IsRequired()
@@ -328,6 +349,9 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<double>("AverageRating")
+                        .HasColumnType("REAL");
+
                     b.Property<int>("BrandId")
                         .HasColumnType("INTEGER");
 
@@ -431,6 +455,9 @@ namespace DataAccess.Migrations
                 {
                     b.HasBaseType("Core.Entities.Concrete.User");
 
+                    b.Property<int?>("ActiveCartId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<float>("Balance")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("REAL")
@@ -442,11 +469,6 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("Entities.Concrete.Users.Staff", b =>
                 {
                     b.HasBaseType("Core.Entities.Concrete.User");
-
-                    b.Property<int>("TypeId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasIndex("TypeId");
 
                     b.HasDiscriminator().HasValue("Staff");
                 });
@@ -567,15 +589,6 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("WishlistId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Entities.Concrete.Users.Staff", b =>
-                {
-                    b.HasOne("Entities.Concrete.Users.StaffType", null)
-                        .WithMany()
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

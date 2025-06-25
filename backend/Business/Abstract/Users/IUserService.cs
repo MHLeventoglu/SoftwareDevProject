@@ -18,5 +18,6 @@ namespace Business.Abstract.Users
         IResult Register(UserForRegisterDto dto);
         IResult SendVerificationEmail(string email);
         IResult VerifyEmail(string email, string verificationCode);
+        IResult AssignRole(int userId, string role);
     }
 }

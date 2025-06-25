@@ -23,6 +23,7 @@ using DataAccess.Concrete.EntityFramework.Orders;
 using DataAccess.Concrete.EntityFramework.Products;
 using DataAccess.Concrete.EntityFramework.Users;
 using DataAccess.Concrete.EntityFramework.Preferences;
+using Core.Utilities.Security.Jwt;
 
 namespace Business.DependencyResolvers.Autofac;
 
@@ -72,6 +73,9 @@ public class AutofacBusinessModule : Module
 
         builder.RegisterType<EfAddressDal>().As<IAddressDal>().SingleInstance();
         builder.RegisterType<EfWishlistDal>().As<IWishlistDal>().SingleInstance();
+
+        builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
+
 
         var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 

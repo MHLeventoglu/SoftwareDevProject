@@ -1,11 +1,13 @@
 using Business.Abstract.Users;
 using Entities.Concrete.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers.Users
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _customerService;
@@ -16,6 +18,7 @@ namespace WebApi.Controllers.Users
         }
 
         [HttpGet("getall")]
+        [Authorize(Roles = "admin")]
         public IActionResult GetAll()
         {
             var result = _customerService.GetAll();
@@ -25,8 +28,16 @@ namespace WebApi.Controllers.Users
         }
 
         [HttpGet("getbyid/{id}")]
+        [Authorize(Roles = Roles.Admin)]
         public IActionResult GetById(int id)
         {
+            // Add user verification
+            var userIdClaim = User.FindFirst("nameid")?.Value;
+            if (userIdClaim != id.ToString() && !User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
+
             var result = _customerService.GetById(id);
             if (result.Success)
                 return Ok(result);
@@ -34,6 +45,7 @@ namespace WebApi.Controllers.Users
         }
 
         [HttpPost("add")]
+        [Authorize(Roles = Roles.Admin)]
         public IActionResult Add([FromBody] Customer customer)
         {
             var result = _customerService.Add(customer);
@@ -43,6 +55,7 @@ namespace WebApi.Controllers.Users
         }
 
         [HttpPut("update/{id}")]
+        [Authorize(Roles = Roles.Admin)]
         public IActionResult Update(int id, [FromBody] Customer customer)
         {
             if (id != customer.Id)
@@ -55,6 +68,7 @@ namespace WebApi.Controllers.Users
         }
 
         [HttpDelete("delete/{id}")]
+        [Authorize(Roles = Roles.Admin)]
         public IActionResult Delete(int id)
         {
             var customerResult = _customerService.GetById(id);

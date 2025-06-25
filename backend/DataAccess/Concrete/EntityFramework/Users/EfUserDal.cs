@@ -6,6 +6,33 @@ namespace DataAccess.Concrete.EntityFramework.Users;
 
 public class EfUserDal : EfEntityRepositoryBase<User, DataBaseContext>, IUserDal
 {
+    public void AddUserClaim(User user, OperationClaim claim)
+    {
+        using (var context = new DataBaseContext())
+        {
+            var existingClaim = context.OperationClaims.FirstOrDefault(c => c.Name == claim.Name);
+            if (existingClaim == null)
+            {
+                // Create new claim if it doesn't exist
+                existingClaim = new OperationClaim { Name = claim.Name };
+                context.OperationClaims.Add(existingClaim);
+                context.SaveChanges();
+            }
+
+            // Add user-claim relationship if it doesn't exist
+            if (!context.UserOperationClaims.Any(uc => 
+                uc.UserId == user.Id && uc.OperationClaimId == existingClaim.Id))
+            {
+                context.UserOperationClaims.Add(new UserOperationClaim
+                {
+                    UserId = (int)user.Id,
+                    OperationClaimId = existingClaim.Id
+                });
+                context.SaveChanges();
+            }
+        }
+    }
+
     public List<OperationClaim> GetClaims(User user)
     {
         using (var context = new DataBaseContext())
@@ -18,4 +45,5 @@ public class EfUserDal : EfEntityRepositoryBase<User, DataBaseContext>, IUserDal
             return result.ToList();
         }
     }
+    
 }

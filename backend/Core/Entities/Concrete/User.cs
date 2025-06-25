@@ -3,7 +3,7 @@ using Core.Entities;
 
 namespace Core.Entities.Concrete;
 
-public class User:IEntity
+public class User : IEntity
 {
     public int? Id { get; set; }
     public string? FirstName { get; set; }
@@ -15,4 +15,5 @@ public class User:IEntity
     public byte[]? PasswordSalt { get; set; }
     public bool Status { get; set; } = true; // Varsayılan olarak aktif kullanıcı
     public DateTime DateAdded { get; set; }
+    public string Role { get; set; }
 }
