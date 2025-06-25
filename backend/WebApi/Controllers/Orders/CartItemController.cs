@@ -1,11 +1,14 @@
 using Business.Abstract.Orders;
 using Entities.Concrete.Orders;
+using Entities.Concrete.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers.Orders
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Roles.User + "," + Roles.Admin)]
     public class CartItemController : ControllerBase
     {
         private readonly ICartItemService _cartItemService;

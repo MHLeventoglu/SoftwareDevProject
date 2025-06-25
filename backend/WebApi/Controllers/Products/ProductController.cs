@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Business.Abstract.Products;
 using Entities.Concrete.Products;
+using Entities.Concrete.Users;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers.Products
 {
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles = Roles.Admin + "," + Roles.User)]
 public class ProductController : ControllerBase
 {
     private readonly IProductService _productService;

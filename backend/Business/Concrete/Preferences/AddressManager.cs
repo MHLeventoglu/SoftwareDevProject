@@ -2,7 +2,6 @@ using Business.Abstract.Preferences;
 using Core.Utilities.Results;
 using Entities.Concrete.Preferences;
 using DataAccess.Abstract.Preferences;
-using Entities.Concrete.Preferences;
 using System.Collections.Generic;
 
 namespace Business.Concrete.Preferences;

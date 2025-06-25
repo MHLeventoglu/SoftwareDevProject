@@ -1,11 +1,14 @@
 using Business.Abstract;
+using Entities.Concrete.Users;
 using Entities.DTOs.UserDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers.Users
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -16,23 +19,61 @@ namespace WebApi.Controllers.Users
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] UserForLoginDto loginDto)
+        [AllowAnonymous]
+        public ActionResult Login(UserForLoginDto userForLoginDto)
         {
-            var result = _authService.Login(loginDto);
-            if (result.Success)
-                return Ok(result);
+            var userToLogin = _authService.Login(userForLoginDto);
+            if (!userToLogin.Success)
+            {
+                return BadRequest(userToLogin.Message);
+            }
 
-            return Unauthorized(result);
+            var result = _authService.CreateAccessToken(userToLogin.Data);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+
+            return BadRequest(result.Message);
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] UserForRegisterDto registerDto)
+        [AllowAnonymous]
+        public IActionResult Register(UserForRegisterDto userForRegisterDto)
         {
-            var result = _authService.Register(registerDto, registerDto.Password);
-            if (result.Success)
-                return Ok(result);
+            var userExists = _authService.UserExists(userForRegisterDto.Email!);
+            if (!userExists.Success)
+            {
+                return BadRequest(userExists.Message);
+            }
 
-            return BadRequest(result);
+            var registerResult = _authService.Register(userForRegisterDto, userForRegisterDto.Password!);
+            if (registerResult.Success)
+            {
+                return Ok(registerResult.Data);
+            }
+
+            return BadRequest(registerResult.Message);
+        }
+
+        [HttpPost("registeradmin")]
+        [AllowAnonymous]
+        public IActionResult RegisterAdmin(UserForRegisterDto userForRegisterDto)
+        {
+            var userExists = _authService.UserExists(userForRegisterDto.Email!);
+            if (!userExists.Success)
+            {
+                return BadRequest(userExists.Message);
+            }
+
+            var registerResult = _authService.RegisterAdmin(userForRegisterDto, userForRegisterDto.Password!);
+            var result = _authService.CreateAccessToken(registerResult.Data);
+            if (result.Success)
+            {
+                return Ok(registerResult);
+            }
+
+            return BadRequest(result.Message);
         }
     }
 }

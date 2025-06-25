@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Business.Abstract.Products;
 using Entities.Concrete.Products;
+using Entities.Concrete.Users;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers.Products
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = Roles.User + "," + Roles.Admin)]
     public class ReviewController : ControllerBase
     {
         private readonly IReviewService _reviewService;

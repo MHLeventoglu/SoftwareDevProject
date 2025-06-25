@@ -25,37 +25,66 @@ builder.Services.AddControllers();
 // builder.Services.AddSingleton<ICarService, CarManager>();
 // builder.Services.AddSingleton<ICarDal, EfCarDal>();
 // Instead of thing that above I used Autofac
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.WithOrigins("http://localhost:3000") 
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             
 var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
-// Oldu ve nasıl oldupuyla ilgili hiçbir fikrim yok
+// Oldu ve nasıl oldupıyla ilgili hiçbir fikrim yok
 ServiceTool.Create(builder.Services);
-// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//     .AddJwtBearer(options =>
-//     {
-//         options.TokenValidationParameters = new TokenValidationParameters
-//         {
-//             ValidateIssuer = true,
-//             ValidateAudience = true,
-//             ValidateLifetime = true,
-//             ValidIssuer = tokenOptions?.Issuer,
-//             ValidAudience = tokenOptions?.Audience,
-//             ValidateIssuerSigningKey = true,
-//             IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions?.SecurityKey!)
-//         };
-//     });
+
+// Configure JWT Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidIssuer = tokenOptions?.Issuer,
+            ValidAudience = tokenOptions?.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions?.SecurityKey!)
+        };
+    });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\r\nExample: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+    });
+    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder
+            .WithOrigins("http://localhost:3000") // Add your frontend URL
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials());
+});
 
 var app = builder.Build();
 
@@ -65,12 +94,29 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors("AllowFrontend");
+else
+{
+    // Enable HSTS in production
+    app.UseHsts();
+}
+
 app.UseHttpsRedirection();
 
-// app.UseAuthentication();
+// Use CORS
+app.UseCors("AllowSpecificOrigin");
 
-// app.UseAuthorization();
+// Add security headers
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    context.Response.Headers["X-Frame-Options"] = "SAMEORIGIN";
+    context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
+    await next();
+});
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapControllers();
 app.Run();

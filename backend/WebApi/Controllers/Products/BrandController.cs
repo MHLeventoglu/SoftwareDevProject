@@ -1,11 +1,14 @@
 using Business.Abstract.Products;
 using Entities.Concrete.Products;
+using Entities.Concrete.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers.Products
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Roles.Admin)]
     public class BrandController : ControllerBase
     {
         private readonly IBrandService _brandService;

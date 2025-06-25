@@ -1,8 +1,5 @@
-using Business.Abstract.Orders;
-using Core.Utilities.Results;
-using DataAccess.Abstract.Orders;
-using Entities.Concrete.Orders;
-using Entities.DTOs.Orders;
+using Business.Abstract.Orders; using Core.Utilities.Results; using DataAccess.Abstract.Orders; using 
+Entities.Concrete.Orders; using Entities.DTOs.Orders;
 
 namespace Business.Concrete.Orders;
 
@@ -51,9 +48,7 @@ public class OrderManager : IOrderService
         if (order == null)
             return new ErrorDataResult<Order>("Order not found.");
 
-        return new SuccessDataResult<Order>(order, "Order fetched successfully.");
-    }
-
+        return new SuccessDataResult<Order>(order, "Order fetched successful
     public IDataResult<List<Order>> GetOrdersByUserId(int userId)
     {
         var orders = _orderDal.GetAll(o => o.CustomerId == userId);

@@ -24,6 +24,7 @@ using DataAccess.Concrete.EntityFramework.Products;
 using DataAccess.Concrete.EntityFramework.Users;
 using DataAccess.Concrete.EntityFramework.Preferences;
 using Core.Utilities.Security.Jwt;
+using Core.Utilities.Security.Jwt;
 
 namespace Business.DependencyResolvers.Autofac;
 

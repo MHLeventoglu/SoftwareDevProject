@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20250527180943_AddEmailVerification")]
-    partial class AddEmailVerification
+    [Migration("20250625110909_FirstMigration")]
+    partial class FirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,18 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OperationClaims");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "user"
+                        });
                 });
 
             modelBuilder.Entity("Core.Entities.Concrete.User", b =>
@@ -51,17 +63,35 @@ namespace DataAccess.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("EmailVerificationToken")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("EmailVerificationTokenExpiry")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("PasswordHash")
+                    b.Property<byte[]>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("BLOB");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Surname")
                         .IsRequired()
@@ -337,7 +367,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DateAdded")
+                    b.Property<DateTime?>("DateAdded")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -434,6 +464,9 @@ namespace DataAccess.Migrations
                 {
                     b.HasBaseType("Core.Entities.Concrete.User");
 
+                    b.Property<int?>("ActiveCartId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<float>("Balance")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("REAL")
@@ -445,11 +478,6 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("Entities.Concrete.Users.Staff", b =>
                 {
                     b.HasBaseType("Core.Entities.Concrete.User");
-
-                    b.Property<int>("TypeId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasIndex("TypeId");
 
                     b.HasDiscriminator().HasValue("Staff");
                 });
@@ -570,15 +598,6 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("WishlistId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Entities.Concrete.Users.Staff", b =>
-                {
-                    b.HasOne("Entities.Concrete.Users.StaffType", null)
-                        .WithMany()
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

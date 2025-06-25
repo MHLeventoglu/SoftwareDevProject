@@ -1,11 +1,14 @@
 using Business.Abstract.Users;
 using Core.Entities.Concrete;
+using Entities.Concrete.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers.Users
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -15,7 +18,8 @@ namespace WebApi.Controllers.Users
             _userService = userService;
         }
 
-  [HttpGet("getall")]
+        [HttpGet("getall")]
+        [Authorize(Roles = Roles.Admin+ "," + Roles.User)]
         public IActionResult GetAll()
         {
             var result = _userService.GetAll();
@@ -68,18 +72,39 @@ namespace WebApi.Controllers.Users
         }
 
         [HttpPost("send-verification-email")]
-        public IActionResult SendVerificationEmail([FromBody] string email)
+        public IActionResult SendVerificationEmail([FromBody] Entities.DTOs.UserDtos.UserForNotificationDto dto,string accessToken)
         {
-            var result = _userService.SendVerificationEmail(email);
+            if (dto == null || string.IsNullOrEmpty(dto.Email))
+                return BadRequest("Email cannot be null or empty.");
+
+            var result = _userService.SendVerificationEmail(dto.Email, accessToken);
             if (!result.Success)
                 return BadRequest(result.Message);
             return Ok(result);
         }
 
-        [HttpPost("verify-email")]
+        [AllowAnonymous]
+        [HttpGet("verify-email")]
         public IActionResult VerifyEmail([FromQuery] string email, [FromQuery] string token)
         {
             var result = _userService.VerifyEmail(email, token);
+            if (!result.Success)
+                return BadRequest(result.Message);
+            // Başarı durumunda HTML ve charset ile döndür
+            
+            return Content(result.Message, "text/html; charset=utf-8");
+        }
+
+        [HttpPost("send-notification")]
+        public IActionResult SendNotification([FromBody] Entities.DTOs.UserDtos.UserForNotificationDto dto)
+        {
+            if (string.IsNullOrEmpty(dto.Email))
+                return BadRequest("Email cannot be null or empty.");
+
+            if (string.IsNullOrEmpty(dto.Message))
+                return BadRequest("Message cannot be null or empty.");
+
+            var result = _userService.SendNotification(dto.Email, dto.Message);
             if (!result.Success)
                 return BadRequest(result.Message);
             return Ok(result);
