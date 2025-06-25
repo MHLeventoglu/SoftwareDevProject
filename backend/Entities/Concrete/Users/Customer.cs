@@ -6,4 +6,5 @@ namespace Entities.Concrete.Users;
 public class Customer : User, IEntity
 {
     public float Balance { get; set; }
+    public int? ActiveCartId { get; set; }
 }

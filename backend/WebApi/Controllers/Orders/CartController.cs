@@ -1,11 +1,14 @@
 using Business.Abstract.Orders;
 using Entities.Concrete.Orders;
+using Entities.Concrete.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers.Orders
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Roles.User + "," + Roles.Admin)]
     public class CartController : ControllerBase
     {
         private readonly ICartService _cartService;
@@ -38,6 +41,13 @@ namespace WebApi.Controllers.Orders
         [HttpGet("getbyuserid/{userId}")]
         public IActionResult GetCartByUserId(int userId)
         {
+            // Add user verification
+            var userIdClaim = User.FindFirst("nameid")?.Value;
+            if (userIdClaim != userId.ToString())
+            {
+                // return Forbid();
+            }
+
             var result = _cartService.GetCartByUserId(userId);
             if (result.Success)
                 return Ok(result);
@@ -79,6 +89,24 @@ namespace WebApi.Controllers.Orders
             if (result.Success)
                 return Ok(result);
 
+            return BadRequest(result);
+        }
+
+        [HttpPost("additem")]
+        public IActionResult AddItemToCart([FromQuery] int userId, [FromQuery] int productId, [FromQuery] int quantity)
+        {
+            var result = _cartService.AddItemToCart(userId, productId, quantity);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+
+        [HttpDelete("removeitem")]
+        public IActionResult RemoveItemFromCart([FromQuery] int userId, [FromQuery] int productId)
+        {
+            var result = _cartService.RemoveItemFromCart(userId, productId);
+            if (result.Success)
+                return Ok(result);
             return BadRequest(result);
         }
     }

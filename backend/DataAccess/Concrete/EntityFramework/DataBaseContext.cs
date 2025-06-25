@@ -32,6 +32,7 @@ public class DataBaseContext : DbContext
             entity.Property(u => u.FirstName).IsRequired().HasMaxLength(50);
             entity.Property(u => u.Surname).IsRequired().HasMaxLength(50);
             entity.Property(u => u.DateAdded).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(u => u.Role).IsRequired(false);
 
             // Configure Discriminator for TPH inheritance
             entity.HasDiscriminator<string>("UserType")
@@ -47,10 +48,7 @@ public class DataBaseContext : DbContext
 
         modelBuilder.Entity<Staff>(entity =>
         {
-            entity.HasOne<StaffType>()
-                  .WithMany()
-                  .HasForeignKey(s => s.TypeId)
-                  .OnDelete(DeleteBehavior.Restrict);
+            entity.Property(s => s.Role).IsRequired(false);
         });
 
         modelBuilder.Entity<StaffType>(entity =>
@@ -185,7 +183,14 @@ public class DataBaseContext : DbContext
         {
             entity.HasKey(oc => oc.Id);
             entity.Property(oc => oc.Name).IsRequired();
+
+            // Seed predefined OperationClaims
+            entity.HasData(
+            new OperationClaim { Id = 1, Name = "admin" },
+            new OperationClaim { Id = 2, Name = "user" }
+            );
         });
+        
 
         modelBuilder.Entity<UserOperationClaim>(entity =>
         {

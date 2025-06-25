@@ -14,4 +14,13 @@ public static class ClaimsPrincipalExtensions
     {
         return claimsPrincipal?.Claims(ClaimTypes.Role);
     }
+
+    public static int GetUserId(this ClaimsPrincipal principal)
+    {
+        var claim = principal.FindFirst(ClaimTypes.NameIdentifier);
+        if (claim == null)
+            throw new Exception("User ID claim not found");
+
+        return int.Parse(claim.Value);
+    }
 }

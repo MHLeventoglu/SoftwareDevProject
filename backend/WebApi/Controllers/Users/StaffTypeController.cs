@@ -1,11 +1,13 @@
 using Business.Abstract.Users;
 using Entities.Concrete.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers.Users
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Roles.Admin)]
     public class StaffTypeController : ControllerBase
     {
         private readonly IStaffTypeService _staffTypeService;

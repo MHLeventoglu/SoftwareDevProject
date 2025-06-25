@@ -1,11 +1,14 @@
 using Business.Abstract.Users;
 using Core.Entities.Concrete;
+using Entities.Concrete.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers.Users
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -16,6 +19,7 @@ namespace WebApi.Controllers.Users
         }
 
         [HttpGet("getall")]
+        [Authorize(Roles = Roles.Admin+ "," + Roles.User)]
         public IActionResult GetAll()
         {
             var result = _userService.GetAll();

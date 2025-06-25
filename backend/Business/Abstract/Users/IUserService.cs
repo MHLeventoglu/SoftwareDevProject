@@ -11,7 +11,7 @@ namespace Business.Abstract.Users
         IDataResult<List<OperationClaim>> GetClaims(User user);
         IResult Register(UserForRegisterDto dto);
         IResult SendVerificationEmail(string email);
-        IResult VerifyEmail(string email, string code);
-        IResult SendNotification(string email, string message);
+        IResult VerifyEmail(string email, string verificationCode);
+        IResult AssignRole(int userId, string role);
     }
 }
