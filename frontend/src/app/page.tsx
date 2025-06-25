@@ -169,6 +169,15 @@ export default function HomePage() {
     }
   };
 
+ const addToFavorites = async (productId: number) => {
+    await fetch('http://localhost:5070/api/wishlist/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: 1, productId })
+    });
+  };
+
+
   const clearFilters = () => {
     setSelectedCategories([]);
     setSelectedBrands([]);
@@ -364,6 +373,13 @@ export default function HomePage() {
                         alt={product.name}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                       />
+                      {/* Favoriye ekle butonu
+                      <button
+                        onClick={() => addToFavorites(product.id)}
+                        className="absolute top-2 right-2 p-2 rounded-full text-red-500 bg-white/80 backdrop-blur-sm"
+                      >
+                        ❤️
+                      </button>           */}
                       <button
                         onClick={() => toggleFavorite(product.id)}
                         className={`absolute top-2 right-2 p-2 rounded-full ${favorites.includes(product.id) ? 'text-red-500' : 'text-gray-300'} bg-white/80 backdrop-blur-sm`}
